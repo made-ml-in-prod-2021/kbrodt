@@ -39,7 +39,7 @@ Run
 mkdir -p report && python eda.py > report/README.md
 ```
 
-to get some eda.
+to get some eda. See in [`report`](./report).
 
 ## Tests
 
