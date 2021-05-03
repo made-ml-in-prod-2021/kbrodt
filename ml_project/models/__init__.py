@@ -7,7 +7,8 @@ logger = logging.getLogger(__name__)
 
 
 def get_model(params: TrainingParams) -> MZ.BaseEstimator:
-    logger.info("get model %s with params %s", params.model_type, params.params)
+    logger.debug("get model %s with params %s", params.model_type, params.params)
+
     model = getattr(MZ, params.model_type)(params.params)
 
     return model

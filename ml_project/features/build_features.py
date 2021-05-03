@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 import pandas as pd
@@ -11,18 +12,29 @@ from ml_project.config.feature_params import (
     PipelineParams,
 )
 
+logger = logging.getLogger(__name__)
+
 
 def build_pipeline(params: List[PipelineParams]) -> Pipeline:
-    pipeline = Pipeline(
-        [(param.name, getattr(T, param.name)(**param.params)) for param in params]
-    )
+    steps = []
+    for param in params:
+        logger.debug("create pipeline %s with parameters %s", param.name, param.params)
+
+        steps.append((param.name, getattr(T, param.name)(**param.params)))
+
+    pipeline = Pipeline(steps)
 
     return pipeline
 
 
 def build_transformer(params: List[ColumnTransformerParams]) -> ColumnTransformer:
-    transformer = ColumnTransformer(
-        [
+    logger.info("create column transformer")
+
+    transformers = []
+    for param in params:
+        logger.debug("create transformer %s with columns %s", param.name, param.columns)
+
+        transformers.append(
             (
                 param.name,
                 param.pipelines
@@ -30,14 +42,16 @@ def build_transformer(params: List[ColumnTransformerParams]) -> ColumnTransforme
                 else build_pipeline(param.pipelines),
                 param.columns,
             )
-            for param in params
-        ]
-    )
+        )
+
+    transformer = ColumnTransformer(transformers)
 
     return transformer
 
 
 def make_features(transformer: ColumnTransformer, df: pd.DataFrame) -> pd.DataFrame:
+    logger.info("create features")
+
     features = transformer.transform(df)
     if hasattr(features, "toarray"):
         features = features.toarray()
@@ -48,6 +62,8 @@ def make_features(transformer: ColumnTransformer, df: pd.DataFrame) -> pd.DataFr
 
 
 def extract_target(df: pd.DataFrame, params: FeatureParams) -> pd.Series:
+    logger.info("extract target %s", params.target_col)
+
     target = df[params.target_col]
 
     return target
