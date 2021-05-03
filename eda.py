@@ -55,11 +55,12 @@ def main():
     data.hist(ax=ax)
 
     fig.tight_layout()
-    hist_path = "report/histogram.png"
+    fname = "histogram.png"
+    hist_path = f"report/{fname}"
     fig.savefig(hist_path)
 
     print("## Histogram\n")
-    print(f"![histogram]({hist_path})")
+    print(f"![histogram]({fname})")
     print()
 
     print("## Correlation\n")

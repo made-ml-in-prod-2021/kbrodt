@@ -14,22 +14,22 @@
 <class 'pandas.core.frame.DataFrame'>
 RangeIndex: 303 entries, 0 to 302
 Data columns (total 14 columns):
- #   Column    Non-Null Count  Dtype
----  ------    --------------  -----
- 0   age       303 non-null    int64
+ #   Column    Non-Null Count  Dtype   
+---  ------    --------------  -----   
+ 0   age       303 non-null    int64   
  1   sex       303 non-null    category
  2   cp        303 non-null    category
- 3   trestbps  303 non-null    int64
- 4   chol      303 non-null    int64
+ 3   trestbps  303 non-null    int64   
+ 4   chol      303 non-null    int64   
  5   fbs       303 non-null    category
  6   restecg   303 non-null    category
- 7   thalach   303 non-null    int64
+ 7   thalach   303 non-null    int64   
  8   exang     303 non-null    category
- 9   oldpeak   303 non-null    float64
+ 9   oldpeak   303 non-null    float64 
  10  slope     303 non-null    category
  11  ca        303 non-null    category
  12  thal      303 non-null    category
- 13  target    303 non-null    int64
+ 13  target    303 non-null    int64   
 dtypes: category(8), float64(1), int64(5)
 memory usage: 17.9 KB
 None
@@ -68,20 +68,20 @@ None
 
 ## Histogram
 
-![histogram](report/histogram.png)
+![histogram](histogram.png)
 
 ## Correlation
 
 ### Numeric
 
-|          |       age |    oldpeak |   trestbps |        chol |     thalach |     target |
-|:---------|----------:|-----------:|-----------:|------------:|------------:|-----------:|
-| age      |  1        |  0.210013  |  0.279351  |  0.213678   | -0.398522   | -0.225439  |
-| oldpeak  |  0.210013 |  1         |  0.193216  |  0.0539519  | -0.344187   | -0.430696  |
-| trestbps |  0.279351 |  0.193216  |  1         |  0.123174   | -0.0466977  | -0.144931  |
-| chol     |  0.213678 |  0.0539519 |  0.123174  |  1          | -0.00993984 | -0.0852391 |
-| thalach  | -0.398522 | -0.344187  | -0.0466977 | -0.00993984 |  1          |  0.421741  |
-| target   | -0.225439 | -0.430696  | -0.144931  | -0.0852391  |  0.421741   |  1         |
+|          |   trestbps |    oldpeak |     thalach |        chol |       age |     target |
+|:---------|-----------:|-----------:|------------:|------------:|----------:|-----------:|
+| trestbps |  1         |  0.193216  | -0.0466977  |  0.123174   |  0.279351 | -0.144931  |
+| oldpeak  |  0.193216  |  1         | -0.344187   |  0.0539519  |  0.210013 | -0.430696  |
+| thalach  | -0.0466977 | -0.344187  |  1          | -0.00993984 | -0.398522 |  0.421741  |
+| chol     |  0.123174  |  0.0539519 | -0.00993984 |  1          |  0.213678 | -0.0852391 |
+| age      |  0.279351  |  0.210013  | -0.398522   |  0.213678   |  1        | -0.225439  |
+| target   | -0.144931  | -0.430696  |  0.421741   | -0.0852391  | -0.225439 |  1         |
 
 ### Categorical
 
