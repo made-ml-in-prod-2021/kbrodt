@@ -4,4 +4,4 @@ from dataclasses import dataclass, field
 @dataclass()
 class TrainingParams:
     model_type: str = field(default="LogisticRegression")
-    seed: int = field(default=314159)
+    params: dict = field(default_factory=dict)
