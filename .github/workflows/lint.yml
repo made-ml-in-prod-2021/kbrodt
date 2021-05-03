@@ -33,6 +33,6 @@ jobs:
       - name: Lint
         run: |
           black --check .
-          isort -c
+          isort -c .
           flake8 .
           mypy .

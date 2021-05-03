@@ -36,7 +36,7 @@ pip install -r requirements.txt
 Run
 
 ```bash
-mkdir -p report && python eda.py > report/eda.md
+mkdir -p report && python eda.py > report/README.md
 ```
 
 to get some eda.

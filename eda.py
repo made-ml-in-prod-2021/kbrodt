@@ -28,8 +28,9 @@ def main():
     print()
 
     print("## General info\n")
-    print(markdown(data.info()))
-    print()
+    print("```")
+    print(data.info())
+    print("```\n")
 
     print("## Statistics\n")
     print("### Numeric\n")
@@ -58,7 +59,7 @@ def main():
     fig.savefig(hist_path)
 
     print("## Histogram\n")
-    print(f"[!histogram]({hist_path})")
+    print(f"![histogram]({hist_path})")
     print()
 
     print("## Correlation\n")
