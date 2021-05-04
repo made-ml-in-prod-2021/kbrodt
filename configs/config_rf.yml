@@ -4,7 +4,7 @@ experiment_path: "models/rf"
 output_model_fname: "model.pkl"
 metric_fname: "metrics.json"
 test_data_path: "data/raw/heart.csv"
-predict_path: "models/logreg/predicts.csv"
+predict_path: "models/rf/predicts.csv"
 
 splitting_params:
   test_size: 0.2
