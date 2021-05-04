@@ -7,7 +7,7 @@ test_data_path: "data/raw/heart.csv"
 predict_path: "models/logreg/predicts.csv"
 
 splitting_params:
-  test_size: 0.1
+  test_size: 0.2
   seed: 314159
 
 train_params:
@@ -22,7 +22,6 @@ feature_params:
         - name: "SimpleImputer"
           params:
             strategy: "mean"
-        - name: "StandardScaler"
       columns:
         - "age"
         - "trestbps"
@@ -30,27 +29,17 @@ feature_params:
         - "thalach"
         - "oldpeak"
 
-    - name: "log1p"
-      pipelines:
-        - name: "Log1p"
-        - name: "StandardScaler"
-      columns:
-        - "trestbps"
-        - "oldpeak"
-
     - name: "categorical"
       pipelines:
-        - name: "OneHotEncoder"
+        - name: "SimpleImputer"
+          params:
+            strategy: "most_frequent"
       columns:
         - "cp"
         - "restecg"
         - "slope"
         - "ca"
         - "thal"
-
-    - name: "binary"
-      pipelines: "passthrough"
-      columns:
         - "sex"
         - "fbs"
         - "exang"
