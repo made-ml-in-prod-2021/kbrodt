@@ -25,15 +25,17 @@ def predict(cfg):
     df = read_data(to_absolute_path(config.test_data_path))
 
     path_to_load = Path(to_absolute_path(config.experiment_path))
-    model, transformer = load_model(path_to_load / config.output_model_fname)
+    output_model_path = str(path_to_load / config.output_model_fname)
+    model, transformer = load_model(output_model_path)
     features = make_features(transformer, df)
 
     predicts = predict_model(model, features, return_proba=True)
     predicts = predicts[:, 1]
 
-    pd.DataFrame(predicts, columns=["target"]).to_csv(
-        to_absolute_path(config.predict_path), index=False
-    )
+    predicts = pd.DataFrame(predicts, columns=["target"])
+    predicts.to_csv(to_absolute_path(config.predict_path), index=False)
+
+    return config.predict_path
 
 
 @hydra.main()

@@ -4,10 +4,11 @@ from textwrap import dedent
 
 import yaml
 
+from predict import predict
 from train import train
 
 
-def test_train(faker):
+def test_predict(faker):
     faker.set_arguments("num", {"min_value": 1, "max_value": 100})
     faker.set_arguments("cat", {"min_value": 0, "max_value": 4})
     faker.set_arguments("bin", {"min_value": 0, "max_value": 1})
@@ -77,17 +78,18 @@ def test_train(faker):
     )
 
     experiment_path = tempfile.mkdtemp()
+    fd, predict_path = tempfile.mkstemp()
 
     config_dict = yaml.safe_load(config_str)
     config_dict["input_data_path"] = input_data_path
+    config_dict["test_data_path"] = input_data_path
     config_dict["experiment_path"] = experiment_path
+    config_dict["predict_path"] = predict_path
     fd, config_path = tempfile.mkstemp()
     with open(fd, "w") as fout:
         yaml.dump(config_dict, fout)
 
-    path_to_model, metrics = train(config_path)
+    train(config_path)
 
-    assert Path(path_to_model).exists()
-
-    for value in metrics.values():
-        assert value >= 0
+    predict_path = predict(config_path)
+    assert Path(predict_path).exists()

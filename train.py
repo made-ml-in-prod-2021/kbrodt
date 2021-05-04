@@ -38,7 +38,8 @@ def train(cfg):
     path_to_save = Path(to_absolute_path(config.experiment_path))
     path_to_save.mkdir(exist_ok=True, parents=True)
 
-    serialize_model((model, transformer), path_to_save / config.output_model_fname)
+    output_model_path = str(path_to_save / config.output_model_fname)
+    serialize_model((model, transformer), output_model_path)
 
     dev_features = make_features(transformer, dev_df)
     dev_target = extract_target(dev_df, config.feature_params)
@@ -49,6 +50,8 @@ def train(cfg):
     metrics = evaluate_model(predicts, dev_target)
     with open(path_to_save / config.metric_fname, "w") as fout:
         json.dump(metrics, fout)
+
+    return str(path_to_save / config.output_model_fname), metrics
 
 
 @hydra.main()
