@@ -14,22 +14,22 @@
 <class 'pandas.core.frame.DataFrame'>
 RangeIndex: 303 entries, 0 to 302
 Data columns (total 14 columns):
- #   Column    Non-Null Count  Dtype   
----  ------    --------------  -----   
- 0   age       303 non-null    int64   
+ #   Column    Non-Null Count  Dtype
+---  ------    --------------  -----
+ 0   age       303 non-null    int64
  1   sex       303 non-null    category
  2   cp        303 non-null    category
- 3   trestbps  303 non-null    int64   
- 4   chol      303 non-null    int64   
+ 3   trestbps  303 non-null    int64
+ 4   chol      303 non-null    int64
  5   fbs       303 non-null    category
  6   restecg   303 non-null    category
- 7   thalach   303 non-null    int64   
+ 7   thalach   303 non-null    int64
  8   exang     303 non-null    category
- 9   oldpeak   303 non-null    float64 
+ 9   oldpeak   303 non-null    float64
  10  slope     303 non-null    category
  11  ca        303 non-null    category
  12  thal      303 non-null    category
- 13  target    303 non-null    int64   
+ 13  target    303 non-null    int64
 dtypes: category(8), float64(1), int64(5)
 memory usage: 17.9 KB
 None

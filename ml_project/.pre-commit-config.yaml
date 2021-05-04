@@ -66,4 +66,4 @@ repos:
     rev: 'v0.812'  # Use the sha / tag you want to point at
     hooks:
       - id: mypy
-        files: 'ml_project'
+        files: 'ml_project/ml_project'

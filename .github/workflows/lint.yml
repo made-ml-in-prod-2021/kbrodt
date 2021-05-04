@@ -35,4 +35,4 @@ jobs:
           black --check ml_project
           isort -c ml_project
           flake8 ml_project
-          mypy ml_project
+          mypy ml_project/ml_project

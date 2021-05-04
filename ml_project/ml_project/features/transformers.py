@@ -33,9 +33,6 @@ class Log1p(BaseEstimator, TransformerMixin):
             dtype=FLOAT_DTYPES,
             force_all_finite="allow-nan",
         )
-        # Xo = X.copy()
-        # if hasattr(Xo, "values"):
-        # Xo = Xo.values
 
         Xo -= np.min(Xo, axis=0, keepdims=True)
         Xo = np.log1p(Xo)
