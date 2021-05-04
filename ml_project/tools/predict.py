@@ -38,7 +38,7 @@ def predict(cfg):
     return config.predict_path
 
 
-@hydra.main()
+@hydra.main(config_path="..")
 def main(cfg):
     setup_logging(to_absolute_path(cfg.logging_path))
     predict(cfg)

@@ -4,7 +4,7 @@ from textwrap import dedent
 
 import yaml
 
-from train import train
+from tools.train import train
 
 
 def test_train(faker):

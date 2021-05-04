@@ -4,8 +4,8 @@ from textwrap import dedent
 
 import yaml
 
-from predict import predict
-from train import train
+from tools.predict import predict
+from tools.train import train
 
 
 def test_predict(faker):

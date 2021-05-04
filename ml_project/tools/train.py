@@ -54,7 +54,7 @@ def train(cfg):
     return str(path_to_save / config.output_model_fname), metrics
 
 
-@hydra.main()
+@hydra.main(config_path="..")
 def main(cfg):
     setup_logging(to_absolute_path(cfg.logging_path))
     train(cfg)

@@ -59,15 +59,15 @@ pip install .
 ### Training
 
 ```bash
-python train.py --config-name ./configs/config_lr.yml
-python train.py --config-name ./configs/config_rf.yml
+python -m tools.train --config-name ./configs/config_lr.yml
+python -m tools.train --config-name ./configs/config_rf.yml
 ```
 
 ### Testing
 
 ```bash
-python predict.py --config-name ./configs/config_lr.yml
-python predict.py --config-name ./configs/config_rf.yml
+python -m tools.predict --config-name ./configs/config_lr.yml
+python -m tools.predict --config-name ./configs/config_rf.yml
 ```
 
 ## Roadmap
