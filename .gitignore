@@ -127,6 +127,7 @@ log/
 *.sqlite
 *.gz
 *.zip
+outputs/
 
 # Python installer logs
 pip-log.txt

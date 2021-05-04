@@ -12,3 +12,12 @@ def serialize_model(model: BaseEstimator, output: Union[str, int]) -> None:
 
     with open(output, "wb") as f:
         pickle.dump(model, f)
+
+
+def load_model(output: Union[str, int]) -> BaseEstimator:
+    logger.info("load model from %s", output)
+
+    with open(output, "rb") as f:
+        model = pickle.load(f)
+
+    return model

@@ -31,6 +31,6 @@ def model():
 
 
 def test_train_model(model, features, target):
-    model = train_model(model, features, target)
+    train_model(model, features, target)
 
     check_is_fitted(model)

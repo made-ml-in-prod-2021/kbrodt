@@ -11,8 +11,13 @@ def test_build_config():
     config_str = dedent(
         """
         input_data_path: "data/raw/heart.csv"
-        output_model_path: "models/model.pkl"
-        metric_path: "models/metrics.json"
+        logging_path: "configs/logging.conf.yml"
+
+        experiment_path: "models/logreg"
+        output_model_fname: "model.pkl"
+        metric_fname: "metrics.json"
+        test_data_path: "data/raw/heart.csv"
+        predict_path: "models/logreg/predicts.csv"
 
         splitting_params:
           test_size: 0.1
@@ -27,8 +32,7 @@ def test_build_config():
               pipelines:
                 - name: "SimpleImputer"
                   params:
-                    missing_values: np.nan
-                    startegy: "mean"
+                    strategy: "mean"
               columns:
                 - "age"
 

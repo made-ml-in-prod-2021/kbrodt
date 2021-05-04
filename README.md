@@ -45,5 +45,27 @@ to get some eda. See in [`report`](./report).
 
 ```bash
 pip install -r requirements_dev.txt
-python -m pytest .
+python -m pytest . -v --cov
+```
+
+## Usage
+
+### Installation
+
+```bash
+pip install .
+```
+
+### Training
+
+```bash
+python train.py --config-name ./configs/config_lr.yml
+python train.py --config-name ./configs/config_rf.yml
+```
+
+### Testing
+
+```bash
+python train.py --config-name ./configs/config_lr.yml
+python train.py --config-name ./configs/config_rf.yml
 ```

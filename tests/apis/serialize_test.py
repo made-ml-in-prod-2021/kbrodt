@@ -1,11 +1,10 @@
-import pickle
 import tempfile
 
 import pandas as pd
 import pytest
 from sklearn.linear_model import LogisticRegression
 
-from ml_project.apis import serialize_model
+from ml_project.apis import load_model, serialize_model
 
 
 @pytest.fixture
@@ -37,8 +36,7 @@ def test_serialize_model(model):
     fd, path = tempfile.mkstemp()
 
     serialize_model(model, fd)
-    with open(path, "rb") as fin:
-        model_loaded = pickle.load(fin)
+    model_loaded = load_model(path)
 
     assert model.coef_.tolist() == model_loaded.coef_.tolist()
     assert model.intercept_.tolist() == model_loaded.intercept_.tolist()

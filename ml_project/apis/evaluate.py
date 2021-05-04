@@ -16,8 +16,11 @@ def evaluate_model(
     logger.info(
         "evaluating model on dataset %s with threshold %s", predicts.shape, threshold
     )
-    return {
+    metrics = {
         "acc": accuracy_score(target, predicts > threshold),
         "auc": roc_auc_score(target, predicts),
         "f1": f1_score(target, predicts > threshold),
     }
+    logger.info("metrics %s", metrics)
+
+    return metrics

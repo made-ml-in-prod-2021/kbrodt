@@ -32,7 +32,12 @@ def build_transformer(params: List[ColumnTransformerParams]) -> ColumnTransforme
 
     transformers = []
     for param in params:
-        logger.debug("create transformer %s with columns %s", param.name, param.columns)
+        logger.debug(
+            "create transformer %s with %s columns: %s",
+            param.name,
+            len(param.columns),
+            param.columns,
+        )
 
         transformers.append(
             (
@@ -50,13 +55,16 @@ def build_transformer(params: List[ColumnTransformerParams]) -> ColumnTransforme
 
 
 def make_features(transformer: ColumnTransformer, df: pd.DataFrame) -> pd.DataFrame:
-    logger.info("create features")
+    logger.info("create features for dataset with shape %s", df.shape)
 
     features = transformer.transform(df)
     if hasattr(features, "toarray"):
         features = features.toarray()
 
     df = pd.DataFrame(features)
+
+    n_features = features.shape[1]
+    logger.info("created %s new features", n_features)
 
     return df
 
