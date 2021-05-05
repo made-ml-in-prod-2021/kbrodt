@@ -56,8 +56,7 @@ jobs:
         working-directory: ./ml_project
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
-          python -m pip install -r requirements_dev.txt
+          python -m pip install .[all]
 
       - name: Test
         working-directory: ./ml_project
