@@ -1,64 +1,12 @@
-import tempfile
-from textwrap import dedent
-
 import yaml
 
 from clfit.config import build_config
 from clfit.config.config import ConfigSchema
 
 
-def test_build_config():
-    config_str = dedent(
-        """
-        input_data_path: "data/raw/heart.csv"
-        logging_path: "configs/logging.conf.yml"
-
-        experiment_path: "models/logreg"
-        output_model_fname: "model.pkl"
-        metric_fname: "metrics.json"
-        test_data_path: "data/raw/heart.csv"
-        predict_path: "models/logreg/predicts.csv"
-
-        splitting_params:
-          test_size: 0.1
-          seed: 314159
-
-        train_params:
-          model_type: "LogisticRegression"
-
-        feature_params:
-          feature_pipelines:
-            - name: "numeric"
-              pipelines:
-                - name: "SimpleImputer"
-                  params:
-                    strategy: "mean"
-              columns:
-                - "age"
-
-            - name: "log1p"
-              pipelines:
-                - name: "Log1p"
-              columns:
-                - "trestbps"
-
-            - name: "categorical"
-              pipelines:
-                - name: "OneHotEncoder"
-              columns:
-                - "cp"
-
-            - name: "binary"
-              pipelines: "passthrough"
-              columns:
-                - "sex"
-          target_col: "target"
-    """
-    )
-
-    config_dict = yaml.safe_load(config_str)
-    fd, path = tempfile.mkstemp()
-    with open(fd, "w") as fout:
+def test_build_config(tmp_path, config_dict):
+    path = tmp_path / "config.yml"
+    with open(path, "w") as fout:
         yaml.dump(config_dict, fout)
 
     config = build_config(path)

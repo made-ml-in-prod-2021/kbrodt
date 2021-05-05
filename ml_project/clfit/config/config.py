@@ -1,5 +1,6 @@
 import logging
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Union
 
 import yaml
@@ -32,7 +33,7 @@ ConfigSchema = class_schema(Config)
 def build_config(path_or_cfg: Union[str, dict]) -> Config:
     schema = ConfigSchema()
 
-    if isinstance(path_or_cfg, str):
+    if isinstance(path_or_cfg, (str, Path)):
         logger.info("building config from %s", path_or_cfg)
 
         with open(path_or_cfg) as fin:
