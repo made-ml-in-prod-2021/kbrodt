@@ -3,7 +3,7 @@ import pytest
 from sklearn.linear_model import LogisticRegression
 from sklearn.utils.validation import check_is_fitted
 
-from ml_project.apis import train_model
+from clfit.apis import train_model
 
 
 @pytest.fixture

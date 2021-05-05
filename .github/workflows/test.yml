@@ -62,4 +62,4 @@ jobs:
       - name: Test
         working-directory: ./ml_project
         run: |
-          python -m pytest .
+          python -m pytest . -v --cov

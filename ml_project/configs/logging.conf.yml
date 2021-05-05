@@ -12,7 +12,7 @@ formatters:
 handlers:
   log_handler:
     class: logging.FileHandler
-    filename: ml_project.log
+    filename: clfit.log
     level: DEBUG
     formatter: simple
 
@@ -23,7 +23,7 @@ handlers:
     formatter: simple
 
 loggers:
-  ml_project:
+  clfit:
     level: DEBUG
     handlers: [log_handler]
     propagate: yes

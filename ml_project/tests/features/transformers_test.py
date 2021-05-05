@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from ml_project.features.transformers import Log1p
+from clfit.features.transformers import Log1p
 
 
 def test_log1p_transformer_np():

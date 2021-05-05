@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 from sklearn.linear_model import LogisticRegression
 
-from ml_project.apis import predict_model
+from clfit.apis import predict_model
 
 
 @pytest.fixture
@@ -36,4 +36,4 @@ def test_train_model(model, features, target):
     assert predicts.shape == target.shape
 
     predicts = predict_model(model, features, return_proba=True)
-    assert predicts.shape == (len(target), 2)
+    assert predicts.shape == target.shape

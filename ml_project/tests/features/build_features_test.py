@@ -1,13 +1,13 @@
 import pandas as pd
 import pytest
 
-from ml_project.config.feature_params import (
+from clfit.config.feature_params import (
     ColumnTransformerParams,
     FeatureParams,
     PipelineParams,
 )
-from ml_project.features import build_transformer, extract_target, make_features
-from ml_project.features.build_features import build_pipeline
+from clfit.features import build_transformer, extract_target, make_features
+from clfit.features.build_features import build_pipeline
 
 
 @pytest.fixture

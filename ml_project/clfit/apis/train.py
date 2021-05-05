@@ -2,7 +2,7 @@ import logging
 
 import pandas as pd
 
-from ml_project.models.zoo import BaseEstimator
+from clfit.models.zoo import BaseEstimator
 
 logger = logging.getLogger(__name__)
 

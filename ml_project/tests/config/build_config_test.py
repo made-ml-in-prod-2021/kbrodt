@@ -3,8 +3,8 @@ from textwrap import dedent
 
 import yaml
 
-from ml_project.config import build_config
-from ml_project.config.config import ConfigSchema
+from clfit.config import build_config
+from clfit.config.config import ConfigSchema
 
 
 def test_build_config():

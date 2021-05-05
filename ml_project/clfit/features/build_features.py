@@ -5,8 +5,8 @@ import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 
-import ml_project.features.transformers as T
-from ml_project.config.feature_params import (
+import clfit.features.transformers as T
+from clfit.config.feature_params import (
     ColumnTransformerParams,
     FeatureParams,
     PipelineParams,

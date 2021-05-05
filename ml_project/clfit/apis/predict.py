@@ -3,7 +3,7 @@ import logging
 import numpy as np
 import pandas as pd
 
-from ml_project.models.zoo import BaseEstimator
+from clfit.models.zoo import BaseEstimator
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ def predict_model(
     )
 
     predicts: np.ndarray = (
-        model.predict_proba(features) if return_proba else model.predict(features)
+        model.predict_proba(features)[:, 1] if return_proba else model.predict(features)
     )
 
     return predicts

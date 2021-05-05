@@ -1,7 +1,7 @@
 import logging
 
-import ml_project.models.zoo as MZ
-from ml_project.config.train_params import TrainingParams
+import clfit.models.zoo as MZ
+from clfit.config.train_params import TrainingParams
 
 logger = logging.getLogger(__name__)
 

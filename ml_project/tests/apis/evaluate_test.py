@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from ml_project.apis import evaluate_model
+from clfit.apis import evaluate_model
 
 
 def test_evaluate_model():

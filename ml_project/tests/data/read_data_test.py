@@ -2,7 +2,7 @@ import tempfile
 
 import pandas as pd
 
-from ml_project.data import read_data
+from clfit.data import read_data
 
 
 def test_read_data():

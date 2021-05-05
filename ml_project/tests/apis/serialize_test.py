@@ -2,9 +2,11 @@ import tempfile
 
 import pandas as pd
 import pytest
+from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
 
-from ml_project.apis import load_model, serialize_model
+from clfit.apis import load_model, serialize_model
 
 
 @pytest.fixture
@@ -32,11 +34,21 @@ def model(features, target):
     return model
 
 
-def test_serialize_model(model):
+@pytest.fixture
+def transformer():
+    tr = ColumnTransformer(["all", "passthrough", [0, 1, 2]])
+
+    return tr
+
+
+def test_serialize_model(model, transformer):
     fd, path = tempfile.mkstemp()
 
-    serialize_model(model, fd)
-    model_loaded = load_model(path)
+    serialize_model(model, transformer, fd)
+    pipeline = load_model(path)
 
+    assert isinstance(pipeline, Pipeline)
+
+    model_loaded = pipeline.steps[-1][-1]
     assert model.coef_.tolist() == model_loaded.coef_.tolist()
     assert model.intercept_.tolist() == model_loaded.intercept_.tolist()

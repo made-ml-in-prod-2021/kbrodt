@@ -37,4 +37,4 @@ jobs:
           black --check .
           isort -c .
           flake8 .
-          mypy ml_project
+          mypy clfit
