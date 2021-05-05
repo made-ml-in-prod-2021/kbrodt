@@ -25,10 +25,10 @@ and activate it
 . venv/bin/activate
 ```
 
-Install all necessary packages
+Finaly, install the module
 
 ```bash
-pip install -r requirements.txt
+pip install .
 ```
 
 ## EDA
@@ -36,6 +36,7 @@ pip install -r requirements.txt
 Run
 
 ```bash
+pip install .[interactive]
 mkdir -p report && python -m tools.eda > report/README.md
 ```
 
@@ -44,16 +45,16 @@ to get some eda. See in [`report`](./report).
 ## Tests
 
 ```bash
-pip install -r requirements_dev.txt
+pip install .[tests,optional]
 python -m pytest . -v --cov
 ```
 
 ## Usage
 
-### Installation
+Installation
 
 ```bash
-pip install .
+pip install .[optional]
 ```
 
 ### Training
