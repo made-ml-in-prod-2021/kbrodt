@@ -6,9 +6,12 @@ import pandas as pd
 import uvicorn
 from clfit.apis import load_model, predict_model
 from fastapi import FastAPI
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from sklearn.pipeline import Pipeline
 
-from config import ENTRY_POINT_MSG, ID_COL, HeartDisease, Patient
+from config import ENTRY_POINT_MSG, ID_COL, STATUS_CODE, HeartDisease, Patient
 
 logger = logging.getLogger(__name__)
 model: Optional[Pipeline] = None
@@ -27,6 +30,14 @@ def make_predict(
     ]
 
     return response
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=STATUS_CODE,
+        content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
+    )
 
 
 @app.get("/")

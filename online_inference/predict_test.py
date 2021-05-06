@@ -1,11 +1,17 @@
 import random
 
 import pytest
-from app import app
 from fastapi.testclient import TestClient
 
-from config import (CAT_OUT_OF_RANGE_ERR, FEATURES, FEATURES_MINMAX_VALS,
-                    INCORRECT_FEATURES_ERR, N_FEATURES)
+from app import app
+from config import (
+    CAT_OUT_OF_RANGE_ERR,
+    FEATURES,
+    FEATURES_MINMAX_VALS,
+    INCORRECT_FEATURES_ERR,
+    N_FEATURES,
+    STATUS_CODE,
+)
 
 N_SAMPLES = 10
 
@@ -134,7 +140,7 @@ def test_prediction_without_data(no_data):
         response = client.get("/predict/", json=no_data)
         response_json = response.json()
 
-        assert response.status_code == 422
+        assert response.status_code == STATUS_CODE
         assert (
             response_json["detail"][0]["msg"]
             == "ensure this value has at least 1 items"
@@ -147,7 +153,7 @@ def test_prediction_bad_types(data_bad_types):
         response_json = response.json()
 
         assert len(response_json["detail"]) == 2 * N_SAMPLES * N_FEATURES
-        assert response.status_code == 422
+        assert response.status_code == STATUS_CODE
         assert all(
             item["msg"] == "value is not a valid float"
             for item in response_json["detail"][::2]
@@ -172,7 +178,7 @@ def test_prediction_with_categorical_values_out_of_range(data_with_cat_vals_oor)
         response = client.get("/predict/", json=data_with_cat_vals_oor)
         response_json = response.json()
 
-        assert response.status_code == 422
+        assert response.status_code == STATUS_CODE
         assert len(response_json["detail"]) == 1
         assert all(
             item["msg"] == CAT_OUT_OF_RANGE_ERR for item in response_json["detail"]
@@ -184,7 +190,7 @@ def test_prediction_incorrect_order(data_bad_order):
         response = client.get("/predict/", json=data_bad_order)
         response_json = response.json()
 
-        assert response.status_code == 422
+        assert response.status_code == STATUS_CODE
         assert len(response_json["detail"]) == 1
         assert all(
             item["msg"] == INCORRECT_FEATURES_ERR for item in response_json["detail"]
@@ -196,7 +202,7 @@ def test_prediction_incorrect_data_without_one_column(data_without_one_column):
         response = client.get("/predict/", json=data_without_one_column)
         response_json = response.json()
 
-        assert response.status_code == 422
+        assert response.status_code == STATUS_CODE
         assert len(response_json["detail"]) == N_SAMPLES
         assert all(
             item["msg"] == f"ensure this value has at least {N_FEATURES} items"
@@ -209,7 +215,7 @@ def test_prediction_incorrect_data_with_extra_columns(data_with_extra_columns):
         response = client.get("/predict/", json=data_with_extra_columns)
         response_json = response.json()
 
-        assert response.status_code == 422
+        assert response.status_code == STATUS_CODE
         assert len(response_json["detail"]) == N_SAMPLES
         assert all(
             item["msg"] == f"ensure this value has at most {N_FEATURES} items"
@@ -222,7 +228,7 @@ def test_prediction_incorrect_features_without_one_columns(features_without_one_
         response = client.get("/predict/", json=features_without_one_column)
         response_json = response.json()
 
-        assert response.status_code == 422
+        assert response.status_code == STATUS_CODE
         assert len(response_json["detail"]) == 1
         assert all(
             item["msg"] == f"ensure this value has at least {N_FEATURES} items"
@@ -235,7 +241,7 @@ def test_prediction_incorrect_features_with_extra_columns(features_with_extra_co
         response = client.get("/predict/", json=features_with_extra_columns)
         response_json = response.json()
 
-        assert response.status_code == 422
+        assert response.status_code == STATUS_CODE
         assert len(response_json["detail"]) == 1
         assert all(
             item["msg"] == f"ensure this value has at most {N_FEATURES} items"
@@ -250,7 +256,7 @@ def test_prediction_incorrect_data_features_without_one_columns(
         response = client.get("/predict/", json=data_features_without_one_column)
         response_json = response.json()
 
-        assert response.status_code == 422
+        assert response.status_code == STATUS_CODE
         assert len(response_json["detail"]) == N_SAMPLES + 1
         assert all(
             item["msg"] == f"ensure this value has at least {N_FEATURES} items"
@@ -265,7 +271,7 @@ def test_prediction_incorrect_data_features_with_extra_columns(
         response = client.get("/predict/", json=data_features_with_extra_columns)
         response_json = response.json()
 
-        assert response.status_code == 422
+        assert response.status_code == STATUS_CODE
         assert len(response_json["detail"]) == N_SAMPLES + 1
         assert all(
             item["msg"] == f"ensure this value has at most {N_FEATURES} items"
@@ -282,7 +288,7 @@ def test_prediction_incorrect_data_without_one_columns_features_with(
         )
         response_json = response.json()
 
-        assert response.status_code == 422
+        assert response.status_code == STATUS_CODE
         assert len(response_json["detail"]) == N_SAMPLES + 1
         assert all(
             item["msg"] == f"ensure this value has at least {N_FEATURES} items"
@@ -303,7 +309,7 @@ def test_prediction_incorrect_data_with_extra_columns_features_without(
         )
         response_json = response.json()
 
-        assert response.status_code == 422
+        assert response.status_code == STATUS_CODE
         assert len(response_json["detail"]) == N_SAMPLES + 1
         assert all(
             item["msg"] == f"ensure this value has at most {N_FEATURES} items"

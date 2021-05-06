@@ -23,6 +23,7 @@ FEATURES_MINMAX_VALS = [
 FEATURES = [f for f, _ in FEATURES_MINMAX_VALS]
 N_FEATURES = len(FEATURES)
 
+STATUS_CODE = 400
 ENTRY_POINT_MSG = "It is heart desease predictor"
 CAT_OUT_OF_RANGE_ERR = "Categorical value is out of range"
 INCORRECT_FEATURES_ERR = "Incorrect features order/columns"
