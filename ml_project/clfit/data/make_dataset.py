@@ -28,4 +28,4 @@ def split_data(
         random_state=params.seed,
     )
 
-    return train_data, val_data
+    return train_data.copy(), val_data.copy()

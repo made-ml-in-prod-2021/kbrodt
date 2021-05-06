@@ -72,6 +72,6 @@ def make_features(transformer: ColumnTransformer, df: pd.DataFrame) -> pd.DataFr
 def extract_target(df: pd.DataFrame, params: FeatureParams) -> pd.Series:
     logger.info("extract target %s", params.target_col)
 
-    target = df[params.target_col]
+    target = df[params.target_col].copy()
 
     return target

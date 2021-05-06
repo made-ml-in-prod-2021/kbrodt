@@ -26,11 +26,13 @@ def train(cfg):
     df = read_data(to_absolute_path(config.input_data_path))
     train_df, dev_df = split_data(df, config.splitting_params)
 
+    train_target = extract_target(train_df, config.feature_params)
+    train_df.drop(config.feature_params.target_col, axis=1, inplace=True)
+
     transformer = build_transformer(config.feature_params.feature_pipelines)
     transformer.fit(train_df)
 
     train_features = make_features(transformer, train_df)
-    train_target = extract_target(train_df, config.feature_params)
 
     model = get_model(config.train_params)
     train_model(model, train_features, train_target)
@@ -41,8 +43,9 @@ def train(cfg):
     output_model_path = str(path_to_save / config.output_model_fname)
     serialize_model(model, transformer, output_model_path)
 
-    dev_features = make_features(transformer, dev_df)
     dev_target = extract_target(dev_df, config.feature_params)
+    dev_df.drop(config.feature_params.target_col, axis=1, inplace=True)
+    dev_features = make_features(transformer, dev_df)
 
     predicts = predict_model(model, dev_features, return_proba=True)
 

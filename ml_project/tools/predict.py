@@ -22,6 +22,7 @@ def predict(cfg):
     config = build_config(cfg)
 
     df = read_data(to_absolute_path(config.test_data_path))
+    df.drop(config.feature_params.target_col, axis=1, inplace=True)
 
     path_to_load = Path(to_absolute_path(config.experiment_path))
     output_model_path = str(path_to_load / config.output_model_fname)
