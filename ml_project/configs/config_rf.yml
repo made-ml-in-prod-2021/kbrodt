@@ -1,0 +1,47 @@
+input_data_path: "data/raw/heart.csv"
+logging_path: "configs/logging.conf.yml"
+experiment_path: "models/rf"
+output_model_fname: "model.pkl"
+metric_fname: "metrics.json"
+test_data_path: "data/raw/heart.csv"
+predict_path: "models/rf/predicts.csv"
+
+splitting_params:
+  test_size: 0.2
+  seed: 314159
+
+train_params:
+  model_type: "RandomForestClassifier"
+  params:
+    random_state: 42
+
+feature_params:
+  feature_pipelines:
+    - name: "numeric"
+      pipelines:
+        - name: "SimpleImputer"
+          params:
+            strategy: "mean"
+      columns:
+        - "age"
+        - "trestbps"
+        - "chol"
+        - "thalach"
+        - "oldpeak"
+
+    - name: "categorical"
+      pipelines:
+        - name: "SimpleImputer"
+          params:
+            strategy: "most_frequent"
+      columns:
+        - "cp"
+        - "restecg"
+        - "slope"
+        - "ca"
+        - "thal"
+        - "sex"
+        - "fbs"
+        - "exang"
+
+  target_col: "target"
