@@ -67,9 +67,9 @@ jobs:
         working-directory: ./online_inference
         run: |
           python -m pip install -r requirements.txt
+          wget https://github.com/made-ml-in-prod-2021/kbrodt/releases/download/v0.1/model.pkl
 
       - name: Test online_inference
         working-directory: ./online_inference
         run: |
-          wget https://github.com/made-ml-in-prod-2021/kbrodt/releases/download/v0.1/model.pkl
           PATH_TO_MODEL=model.pkl pytest -v
