@@ -3,6 +3,11 @@
 ## Preresquistes
 
 First follow `ml_project` to download data and train models. Then put them into this folder.
+Or you can download the model via
+
+```bash
+wget https://github.com/made-ml-in-prod-2021/kbrodt/releases/download/v0.1/model.pkl
+```
 
 Build docker
 
