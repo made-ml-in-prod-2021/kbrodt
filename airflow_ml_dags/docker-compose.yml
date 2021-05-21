@@ -8,6 +8,7 @@ x-environment: &airflow_environment
   - AIRFLOW__CORE__STORE_DAG_CODE=True
   - AIRFLOW__CORE__STORE_SERIALIZED_DAGS=True
   - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
+  - AIRFLOW_VAR_DATA_PATH=/tmp/data
 
 x-airflow-image: &airflow_image apache/airflow:2.0.0-python3.6
 # ====================================== /AIRFLOW ENVIRONMENT VARIABLES ======================================
@@ -62,10 +63,23 @@ services:
     volumes:
       - logs:/opt/airflow/logs
       - ./dags/:/opt/airflow/dags/
-      - ./data/:/opt/airflow/data/
       - /var/run/docker.sock:/var/run/docker.sock
     environment: *airflow_environment
     command: scheduler
+
+  ml_base:
+    build:
+      context: images/airflow-ml-base
+    image:
+      airflow-ml-base
+    restart: "no"
+
+  data_download:
+    build:
+      context: images/airflow-data-download
+    image:
+      airflow-data-download
+    restart: "no"
 
 volumes:
   logs:
