@@ -5,7 +5,6 @@ from clfit.config import build_config
 from clfit.data import read_data
 from clfit.features import build_transformer, extract_target, make_features
 from clfit.models import get_model
-
 from constants import TRAIN_DATA_FNAME
 
 

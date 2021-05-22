@@ -2,7 +2,6 @@ from pathlib import Path
 
 from clfit.config.split_params import SplittingParams
 from clfit.data import read_data, split_data
-
 from constants import DEV_DATA_FNAME, TRAIN_DATA_FNAME
 
 

@@ -5,9 +5,8 @@ from clfit.apis import load_model, predict_model
 from clfit.config import build_config
 from clfit.data import read_data
 from clfit.features import extract_target
-from sklearn.metrics import accuracy_score
-
 from constants import DEV_DATA_FNAME
+from sklearn.metrics import accuracy_score
 
 
 def validate(config_path, input_data_dir, input_model_dir):

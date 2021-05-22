@@ -15,7 +15,7 @@ DATA_PATH = Variable.get("data_path")
 
 
 def generate_operator(task_id, command):
-    operator =  DockerOperator(
+    operator = DockerOperator(
         image="airflow-train-pipeline",
         command=command,
         network_mode="bridge",
@@ -33,7 +33,9 @@ with DAG(
     schedule_interval="@weekly",
     start_date=days_ago(8),
 ) as dag:
-    cmd = "process --input-data /data/raw/{{ ds }} --output-data /data/processed/{{ ds }}"
+    cmd = (
+        "process --input-data /data/raw/{{ ds }} --output-data /data/processed/{{ ds }}"
+    )
     preprocessing = generate_operator("process", cmd)
 
     cmd = "split --input-data /data/processed/{{ ds }} --test-size 0.1 --seed 42"

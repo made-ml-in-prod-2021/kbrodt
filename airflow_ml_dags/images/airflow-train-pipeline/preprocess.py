@@ -2,7 +2,6 @@ from pathlib import Path
 
 import pandas as pd
 from clfit.data import read_data
-
 from constants import DATA_FNAME, TARGET_FNAME, TRAIN_DATA_FNAME
 
 
