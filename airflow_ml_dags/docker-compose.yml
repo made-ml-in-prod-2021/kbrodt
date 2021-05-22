@@ -9,6 +9,7 @@ x-environment: &airflow_environment
   - AIRFLOW__CORE__STORE_SERIALIZED_DAGS=True
   - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
   - AIRFLOW_VAR_DATA_PATH=/tmp/data
+  - AIRFLOW_VAR_MODEL_PATH=/data/models/2021-05-22/model.pkl
 
 x-airflow-image: &airflow_image apache/airflow:2.0.0-python3.6
 # ====================================== /AIRFLOW ENVIRONMENT VARIABLES ======================================
@@ -86,6 +87,13 @@ services:
       context: images/airflow-train-pipeline
     image:
       airflow-train-pipeline
+    restart: "no"
+
+  predict:
+    build:
+      context: images/airflow-predict
+    image:
+      airflow-predict
     restart: "no"
 
 volumes:
