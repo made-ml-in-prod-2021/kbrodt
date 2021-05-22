@@ -8,4 +8,4 @@ RUN python -m venv $VIRTUAL_ENV \
 
 COPY download.py /download.py
 
-ENTRYPOINT ["python", "download.py", "--output-dir"]
+ENTRYPOINT ["python", "download.py"]

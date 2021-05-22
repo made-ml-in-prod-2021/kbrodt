@@ -26,7 +26,7 @@ def wait_fot_data_and_target(input_data_dir):
 def generate_operator(task_id, command):
     operator = DockerOperator(
         image="airflow-ml-pipeline",
-        command=command,
+        command=f"{task_id} {command}",
         network_mode="bridge",
         task_id=f"docker-airflow-train-pipeline-{task_id}",
         do_xcom_push=False,
@@ -55,16 +55,28 @@ with DAG(
         mode="poke",
     )
 
-    cmd = f"process --input-data {RAW_DATA_DIR} --output-data {PROCESSED_DATA_DIR}"
-    preprocessing = generate_operator("process", cmd)
+    preprocessing = generate_operator(
+        "process",
+        f"--input-data {RAW_DATA_DIR}" f" --output-data {PROCESSED_DATA_DIR}",
+    )
 
-    cmd = f"split --config {CONFIG_PATH} --input-data {PROCESSED_DATA_DIR}"
-    split = generate_operator("split", cmd)
+    split = generate_operator(
+        "split",
+        f"--config {CONFIG_PATH}" f" --input-data {PROCESSED_DATA_DIR}",
+    )
 
-    cmd = f"train --config {CONFIG_PATH} --input-data {PROCESSED_DATA_DIR} --output-model {MODEL_DIR}"
-    train = generate_operator("train", cmd)
+    train = generate_operator(
+        "train",
+        f"--config {CONFIG_PATH}"
+        f" --input-data {PROCESSED_DATA_DIR}"
+        f" --output-model {MODEL_DIR}",
+    )
 
-    cmd = f"validate --config {CONFIG_PATH} --input-data {PROCESSED_DATA_DIR} --input-model {MODEL_DIR}"
-    validate = generate_operator("validate", cmd)
+    validate = generate_operator(
+        "validate",
+        f"--config {CONFIG_PATH}"
+        f" --input-data {PROCESSED_DATA_DIR}"
+        f" --input-model {MODEL_DIR}",
+    )
 
     wait_data_and_target >> preprocessing >> split >> train >> validate

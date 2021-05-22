@@ -8,10 +8,9 @@ with DAG(
     schedule_interval="@daily",
     start_date=START_DATE,
 ) as dag:
-    cmd = RAW_DATA_DIR
     data_download = DockerOperator(
         image="airflow-data-download",
-        command=cmd,
+        command=f"--output-dir {RAW_DATA_DIR}",
         network_mode="bridge",
         task_id="docker-airflow-data-download",
         do_xcom_push=False,
