@@ -1,5 +1,11 @@
 # Homework 3: airflow
 
+## Preresquistes
+
+Configure `airflow` parameters in [`dags/constants.py`](dags/constants.py) and
+training parameters in [`configs/config.yml`](configs/config.yml). Set paths to
+data folders in envirenment variables in [`docker-compose.yml`](./docker-compose.yml).
+
 ## Run airflow
 
 ```bash
