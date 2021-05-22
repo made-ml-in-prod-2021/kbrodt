@@ -81,5 +81,12 @@ services:
       airflow-data-download
     restart: "no"
 
+  train_pipeline:
+    build:
+      context: images/airflow-train-pipeline
+    image:
+      airflow-train-pipeline
+    restart: "no"
+
 volumes:
   logs:

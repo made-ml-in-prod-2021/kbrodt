@@ -17,7 +17,7 @@ with DAG(
     "data_download",
     default_args=default_args,
     schedule_interval="@daily",
-    start_date=days_ago(5),
+    start_date=days_ago(8),
 ) as dag:
     data_download = DockerOperator(
         image="airflow-data-download",
