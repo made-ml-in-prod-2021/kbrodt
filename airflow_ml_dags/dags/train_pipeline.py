@@ -26,12 +26,13 @@ def wait_fot_data_and_target(input_data_dir):
 
 def generate_operator(task_id, command):
     operator = DockerOperator(
-        image="airflow-train-pipeline",
+        image="airflow-ml-pipeline",
         command=command,
         network_mode="bridge",
         task_id=f"docker-airflow-train-pipeline-{task_id}",
         do_xcom_push=False,
         volumes=[f"{DATA_PATH}:/data"],
+        entrypoint="python main.py",
     )
 
     return operator

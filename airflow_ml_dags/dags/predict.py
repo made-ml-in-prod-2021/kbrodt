@@ -48,12 +48,13 @@ with DAG(
         " --output-data /data/predictions/{{ ds }}/predictions.csv"
     )
     predict = DockerOperator(
-        image="airflow-predict",
+        image="airflow-ml-pipeline",
         command=cmd,
         network_mode="bridge",
         task_id="docker-airflow-predict",
         do_xcom_push=False,
         volumes=[f"{DATA_PATH}:/data"],
+        entrypoint="python predict.py",
     )
 
     wait_data_and_model >> predict
