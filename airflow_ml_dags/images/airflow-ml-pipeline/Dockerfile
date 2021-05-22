@@ -16,6 +16,5 @@ COPY main.py \
     split.py \
     train.py \
     validate.py \
-    config.yml \
     predict.py \
     /

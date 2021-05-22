@@ -1,20 +1,16 @@
-import datetime
 from pathlib import Path
 
 from airflow import DAG
-from airflow.models import Variable
 from airflow.providers.docker.operators.docker import DockerOperator
 from airflow.sensors.python import PythonSensor
-from airflow.utils.dates import days_ago
-
-default_args = {
-    "owner": "airflow",
-    "email": ["airflow@example.com"],
-    "retries": 1,
-    "retry_delay": datetime.timedelta(minutes=5),
-}
-DATA_PATH = Variable.get("data_path")
-MODEL_PATH = Variable.get("model_path")
+from constants import (
+    DATA_VOLUME_DIR,
+    DEFAULT_ARGS,
+    MODEL_PATH,
+    PREDICTIONS_DIR,
+    RAW_DATA_DIR,
+    START_DATE,
+)
 
 
 def wait_fot_data_and_model(input_data_dir):
@@ -26,15 +22,15 @@ def wait_fot_data_and_model(input_data_dir):
 
 with DAG(
     "predict",
-    default_args=default_args,
+    default_args=DEFAULT_ARGS,
     schedule_interval="@daily",
-    start_date=days_ago(8),
+    start_date=START_DATE,
 ) as dag:
     wait_data_and_model = PythonSensor(
         task_id="wait-for-data-and-model",
         python_callable=wait_fot_data_and_model,
         op_kwargs={
-            "input_data_dir": "/data/raw/{{ ds }}",
+            "input_data_dir": RAW_DATA_DIR,
         },
         timeout=6000,
         poke_interval=10,
@@ -43,9 +39,9 @@ with DAG(
     )
 
     cmd = (
-        "--input-data /data/raw/{{ ds }}/data.csv"
+        f"--input-data {RAW_DATA_DIR}/data.csv"
         f" --model-path {MODEL_PATH}"
-        " --output-data /data/predictions/{{ ds }}/predictions.csv"
+        f" --output-data {PREDICTIONS_DIR}/predictions.csv"
     )
     predict = DockerOperator(
         image="airflow-ml-pipeline",
@@ -53,7 +49,7 @@ with DAG(
         network_mode="bridge",
         task_id="docker-airflow-predict",
         do_xcom_push=False,
-        volumes=[f"{DATA_PATH}:/data"],
+        volumes=[f"{DATA_VOLUME_DIR}:/data"],
         entrypoint="python predict.py",
     )
 

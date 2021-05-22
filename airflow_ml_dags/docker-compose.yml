@@ -8,8 +8,9 @@ x-environment: &airflow_environment
   - AIRFLOW__CORE__STORE_DAG_CODE=True
   - AIRFLOW__CORE__STORE_SERIALIZED_DAGS=True
   - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
-  - AIRFLOW_VAR_DATA_PATH=/tmp/data
-  - AIRFLOW_VAR_MODEL_PATH=/data/models/2021-05-22/model.pkl
+  - AIRFLOW_VAR_DATA_PATH=/home/kbrodt/edu/made-ml-in-prod-2021/airflow_ml_dags/data        # to change
+  - AIRFLOW_VAR_CONFIGS_PATH=/home/kbrodt/edu/made-ml-in-prod-2021/airflow_ml_dags/configs  # to change
+  - AIRFLOW_VAR_MODEL_PATH=/data/models/2021-05-22/model.pkl                                # to change
 
 x-airflow-image: &airflow_image apache/airflow:2.0.0-python3.6
 # ====================================== /AIRFLOW ENVIRONMENT VARIABLES ======================================
@@ -64,7 +65,7 @@ services:
     volumes:
       - logs:/opt/airflow/logs
       - ./dags/:/opt/airflow/dags/
-      - /tmp/data:/data/
+      - ./data/:/data/  # to change
       - /var/run/docker.sock:/var/run/docker.sock
     environment: *airflow_environment
     command: scheduler
