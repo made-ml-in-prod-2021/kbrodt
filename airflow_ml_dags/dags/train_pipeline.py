@@ -58,7 +58,7 @@ with DAG(
     cmd = f"process --input-data {RAW_DATA_DIR} --output-data {PROCESSED_DATA_DIR}"
     preprocessing = generate_operator("process", cmd)
 
-    cmd = f"split --input-data {PROCESSED_DATA_DIR} --test-size 0.1 --seed 42"
+    cmd = f"split --config {CONFIG_PATH} --input-data {PROCESSED_DATA_DIR}"
     split = generate_operator("split", cmd)
 
     cmd = f"train --config {CONFIG_PATH} --input-data {PROCESSED_DATA_DIR} --output-model {MODEL_DIR}"

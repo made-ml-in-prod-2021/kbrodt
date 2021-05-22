@@ -51,7 +51,7 @@ def setup_preprocess_parser(subparsers):
 
 
 def callback_train_test_split(arguments):
-    train_test_split(arguments.input_data, arguments.test_size, arguments.seed)
+    train_test_split(arguments.config, arguments.input_data)
 
 
 def setup_split_parser(subparsers):
@@ -62,24 +62,16 @@ def setup_split_parser(subparsers):
     )
 
     parser.add_argument(
+        "--config",
+        type=str,
+        required=True,
+        help="Path to config",
+    )
+    parser.add_argument(
         "--input-data",
         type=str,
         required=True,
         help="Path to folder with processed data",
-    )
-    parser.add_argument(
-        "--test-size",
-        type=float,
-        required=False,
-        default=0.1,
-        help="Test size for splitting",
-    )
-    parser.add_argument(
-        "--seed",
-        type=int,
-        required=False,
-        default=42,
-        help="Random state",
     )
 
     parser.set_defaults(callback=callback_train_test_split)
