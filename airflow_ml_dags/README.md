@@ -12,6 +12,11 @@ data folders in envirenment variables in [`docker-compose.yml`](./docker-compose
 docker-compose up -d --build
 ```
 
+## Usefull links
+
+* [setup airflow send email](https://stackoverflow.com/questions/51829200/how-to-set-up-airflow-send-email)
+* [force a task to fail](https://stackoverflow.com/questions/43111506/how-do-i-force-a-task-on-airflow-to-fail)
+
 ## Roadmap
 
 - [X] Поднимите airflow локально, используя docker compose (можно использовать
@@ -63,6 +68,6 @@ https://github.com/made-ml-in-prod-2021/airflow-examples/blob/main/dags/11_docke
 - [ ] вместо пути в airflow variables  используйте апи Mlflow Model Registry (5
       доп баллов)
   Даг для инференса подхватывает последнюю продакшен модель.
-- [ ] Настройте alert в случае падения дага (3 доп. балла)
+- [X] Настройте alert в случае падения дага (3 доп. балла)
   https://www.astronomer.io/guides/error-notifications-in-airflow
 - [ ] традиционно, самооценка (1 балл)

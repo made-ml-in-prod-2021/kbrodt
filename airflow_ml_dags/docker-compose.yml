@@ -65,6 +65,7 @@ services:
     volumes:
       - logs:/opt/airflow/logs
       - ./dags/:/opt/airflow/dags/
+      - ./configs/airflow.cfg:/opt/airflow/airflow.cfg
       - ./data/:/data/  # to change
       - /var/run/docker.sock:/var/run/docker.sock
     environment: *airflow_environment
