@@ -2,7 +2,7 @@ from pathlib import Path
 
 from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
-from airflow.sensors.python import PythonSensor
+from airflow.sensors.filesystem import FileSensor
 from constants import (
     CONFIG_PATH,
     CONFIGS_VOLUME_DIR,
@@ -13,14 +13,6 @@ from constants import (
     RAW_DATA_DIR,
     START_DATE,
 )
-
-
-def wait_fot_data_and_target(input_data_dir):
-    input_data_path = Path(input_data_dir)
-
-    return (input_data_path / "data.csv").exists() and (
-        input_data_path / "target.csv"
-    ).exists()
 
 
 def generate_operator(task_id, command):
@@ -43,12 +35,18 @@ with DAG(
     schedule_interval="@weekly",
     start_date=START_DATE,
 ) as dag:
-    wait_data_and_target = PythonSensor(
-        task_id="wait-for-data-and-target",
-        python_callable=wait_fot_data_and_target,
-        op_kwargs={
-            "input_data_dir": RAW_DATA_DIR,
-        },
+    wait_data = FileSensor(
+        task_id="wait-for-data",
+        filepath=str(Path(RAW_DATA_DIR) / "data.csv"),
+        timeout=6000,
+        poke_interval=10,
+        retries=100,
+        mode="poke",
+    )
+
+    wait_target = FileSensor(
+        task_id="wait-for-target",
+        filepath=str(Path(RAW_DATA_DIR) / "target.csv"),
         timeout=6000,
         poke_interval=10,
         retries=100,
@@ -79,4 +77,4 @@ with DAG(
         f" --input-model {MODEL_DIR}",
     )
 
-    wait_data_and_target >> preprocessing >> split >> train >> validate
+    [wait_data, wait_target] >> preprocessing >> split >> train >> validate

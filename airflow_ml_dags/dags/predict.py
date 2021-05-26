@@ -2,7 +2,7 @@ from pathlib import Path
 
 from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
-from airflow.sensors.python import PythonSensor
+from airflow.sensors.filesystem import FileSensor
 from constants import (
     DATA_VOLUME_DIR,
     DEFAULT_ARGS,
@@ -12,26 +12,24 @@ from constants import (
     START_DATE,
 )
 
-
-def wait_fot_data_and_model(input_data_dir):
-    input_data_path = Path(input_data_dir)
-    model_path = Path(MODEL_PATH)
-
-    return (input_data_path / "data.csv").exists() and model_path.exists()
-
-
 with DAG(
     "predict",
     default_args=DEFAULT_ARGS,
     schedule_interval="@daily",
     start_date=START_DATE,
 ) as dag:
-    wait_data_and_model = PythonSensor(
-        task_id="wait-for-data-and-model",
-        python_callable=wait_fot_data_and_model,
-        op_kwargs={
-            "input_data_dir": RAW_DATA_DIR,
-        },
+    wait_data = FileSensor(
+        task_id="wait-for-data",
+        filepath=str(Path(RAW_DATA_DIR) / "data.csv"),
+        timeout=6000,
+        poke_interval=10,
+        retries=100,
+        mode="poke",
+    )
+
+    wait_model = FileSensor(
+        task_id="wait-for-model",
+        filepath=MODEL_PATH,
         timeout=6000,
         poke_interval=10,
         retries=100,
@@ -53,4 +51,4 @@ with DAG(
         entrypoint="python predict.py",
     )
 
-    wait_data_and_model >> predict
+    [wait_data, wait_model] >> predict
