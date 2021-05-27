@@ -89,8 +89,6 @@ services:
     image:
       airflow-ml-pipeline
     restart: "no"
-    depends_on:
-      - mlflow
 
   mlflow:
     build:
