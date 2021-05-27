@@ -11,6 +11,7 @@ x-environment: &airflow_environment
   - AIRFLOW_VAR_DATA_PATH=/home/kbrodt/edu/made-ml-in-prod-2021/airflow_ml_dags/data        # to change
   - AIRFLOW_VAR_CONFIGS_PATH=/home/kbrodt/edu/made-ml-in-prod-2021/airflow_ml_dags/configs  # to change
   - AIRFLOW_VAR_MODEL_PATH=/data/models/2021-05-22/model.pkl                                # to change
+  - AIRFLOW_VAR_MLFLOW_TRACKING_URI=http://mlflow:5000
 
 x-airflow-image: &airflow_image apache/airflow:2.0.0-python3.6
 # ====================================== /AIRFLOW ENVIRONMENT VARIABLES ======================================
@@ -47,7 +48,6 @@ services:
       args:
         AIRFLOW_BASE_IMAGE: *airflow_image
     image: airflow-docker
-
     restart: always
     depends_on:
       - postgres
@@ -64,7 +64,6 @@ services:
       args:
         AIRFLOW_BASE_IMAGE: *airflow_image
     image: airflow-docker
-
     restart: always
     depends_on:
       - postgres
@@ -90,6 +89,18 @@ services:
     image:
       airflow-ml-pipeline
     restart: "no"
+    depends_on:
+      - mlflow
+
+  mlflow:
+    build:
+      context: images/airflow-mlflow
+    image:
+      airflow-mlflow
+    restart: always
+    ports:
+        - "5000:5000"
+    command: 'mlflow server --backend-store-uri ./mlflow --host 0.0.0.0 --port 5000'
 
 volumes:
   logs:
