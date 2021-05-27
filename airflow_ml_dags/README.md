@@ -16,6 +16,9 @@ docker-compose up -d --build
 
 * [setup airflow send email](https://stackoverflow.com/questions/51829200/how-to-set-up-airflow-send-email)
 * [force a task to fail](https://stackoverflow.com/questions/43111506/how-do-i-force-a-task-on-airflow-to-fail)
+* [docker network](https://docs.docker.com/network/)
+* [link multiple docker containers via network](https://tjtelan.com/blog/how-to-link-multiple-docker-compose-via-network/)
+* [set network in airflow docker operator](https://github.com/apache/airflow/issues/8418)
 
 ## Roadmap
 

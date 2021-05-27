@@ -8,7 +8,9 @@ from constants import (
     CONFIGS_VOLUME_DIR,
     DATA_VOLUME_DIR,
     DEFAULT_ARGS,
+    MLFLOW_TRACKING_URI,
     MODEL_DIR,
+    NETWORK,
     PROCESSED_DATA_DIR,
     RAW_DATA_DIR,
     START_DATE,
@@ -19,11 +21,12 @@ def generate_operator(task_id, command):
     operator = DockerOperator(
         image="airflow-ml-pipeline",
         command=f"{task_id} {command}",
-        network_mode="bridge",
+        network_mode=NETWORK,
         task_id=f"docker-airflow-train-pipeline-{task_id}",
         do_xcom_push=False,
         volumes=[f"{DATA_VOLUME_DIR}:/data", f"{CONFIGS_VOLUME_DIR}:/configs:ro"],
         entrypoint="python main.py",
+        environment={"MLFLOW_TRACKING_URI": MLFLOW_TRACKING_URI},
     )
 
     return operator

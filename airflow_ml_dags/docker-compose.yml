@@ -11,7 +11,8 @@ x-environment: &airflow_environment
   - AIRFLOW_VAR_DATA_PATH=/home/kbrodt/edu/made-ml-in-prod-2021/airflow_ml_dags/data        # to change
   - AIRFLOW_VAR_CONFIGS_PATH=/home/kbrodt/edu/made-ml-in-prod-2021/airflow_ml_dags/configs  # to change
   - AIRFLOW_VAR_MODEL_PATH=/data/models/2021-05-22/model.pkl                                # to change
-  - AIRFLOW_VAR_MLFLOW_TRACKING_URI=http://mlflow:5000
+  - AIRFLOW_VAR_NETWORK=airflow-net                                                         # to change
+  - AIRFLOW_VAR_MLFLOW_TRACKING_URI=http://mlflow:5000                                      # to change
 
 x-airflow-image: &airflow_image apache/airflow:2.0.0-python3.6
 # ====================================== /AIRFLOW ENVIRONMENT VARIABLES ======================================
@@ -22,14 +23,19 @@ services:
       - POSTGRES_USER=airflow
       - POSTGRES_PASSWORD=airflow
       - POSTGRES_DB=airflow
+    networks:
+      - airflow-net
     ports:
       - "5432:5432"
+
   init:
     build:
       context: images/airflow-docker
       args:
         AIRFLOW_BASE_IMAGE: *airflow_image
     image: airflow-docker
+    networks:
+      - airflow-net
     depends_on:
       - postgres
     environment: *airflow_environment
@@ -51,6 +57,8 @@ services:
     restart: always
     depends_on:
       - postgres
+    networks:
+      - airflow-net
     ports:
       - "8080:8080"
     volumes:
@@ -64,6 +72,8 @@ services:
       args:
         AIRFLOW_BASE_IMAGE: *airflow_image
     image: airflow-docker
+    networks:
+      - airflow-net
     restart: always
     depends_on:
       - postgres
@@ -95,6 +105,8 @@ services:
       context: images/airflow-mlflow
     image:
       airflow-mlflow
+    networks:
+      - airflow-net
     restart: always
     ports:
         - "5000:5000"
@@ -102,3 +114,7 @@ services:
 
 volumes:
   logs:
+
+networks:
+  airflow-net:
+    name: airflow-net
