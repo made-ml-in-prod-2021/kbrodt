@@ -10,6 +10,7 @@ from clfit.data import read_data
 from clfit.features import build_transformer, extract_target, make_features
 from clfit.models import get_model
 from constants import TRAIN_DATA_FNAME
+from mlflow.tracking import MlflowClient
 from sklearn.metrics import accuracy_score
 
 
@@ -60,7 +61,12 @@ def train(config_path, input_data_dir, output_model_dir):
         model = load_model(output_model_path)
         tracking_uri = mlflow.get_tracking_uri()
         tracking_url_type_store = urlparse(tracking_uri).scheme
-        model_name = Path(config.output_model_fname).stem
+
+        try:
+            model_name = os.environ["MODEL_NAME"]
+        except KeyError:
+            model_name = Path(config.output_model_fname).stem
+
         if tracking_url_type_store != "file":
             mlflow.sklearn.log_model(
                 model,
@@ -69,3 +75,22 @@ def train(config_path, input_data_dir, output_model_dir):
             )
         else:
             mlflow.sklearn.log_model(model, model_name)
+
+    client = MlflowClient()
+    try:
+        stage = os.environ["MODEL_STAGE"]
+    except KeyError:
+        stage = "Production"
+
+    version = 1
+    for rm in client.list_registered_models():
+        rm_dict = dict(rm)
+        if rm_dict["name"] == model_name:
+            version = len(rm_dict["latest_versions"])
+            break
+
+    client.transition_model_version_stage(
+        name=model_name,
+        version=version,
+        stage=stage,
+    )

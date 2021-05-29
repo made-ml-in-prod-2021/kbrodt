@@ -17,9 +17,7 @@ To stop
 
 ```bash
 docker-compose down
-docker system prune
-docker volume prune
-docker network prune
+yes | docker system prune && yes | docker volume prune && yes | docker network prune
 ```
 
 ## Usefull links
@@ -86,4 +84,4 @@ https://github.com/made-ml-in-prod-2021/airflow-examples/blob/main/dags/11_docke
   Даг для инференса подхватывает последнюю продакшен модель.
 - [X] Настройте alert в случае падения дага (3 доп. балла)
   https://www.astronomer.io/guides/error-notifications-in-airflow
-- [ ] традиционно, самооценка (1 балл)
+- [X] традиционно, самооценка (1 балл)

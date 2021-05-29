@@ -17,10 +17,12 @@ x-environment: &airflow_environment
   - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
   - AIRFLOW_VAR_DATA_PATH=${DATA_PATH}
   - AIRFLOW_VAR_CONFIGS_PATH=${CONFIGS_PATH}
-  - AIRFLOW_VAR_MODEL_PATH=/data/models/2021-05-22/model.pkl  # to change
   - AIRFLOW_VAR_NETWORK=${NETWORK_NAME}
   - AIRFLOW_VAR_MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI}
   - AIRFLOW_VAR_ARTIFACT_VOLUME=${ARTIFACT_VOLUME}:${ARTIFACT_PATH}
+  - AIRFLOW_VAR_MODEL_PATH=${MODEL_PATH}
+  - AIRFLOW_VAR_MODEL_NAME=${MODEL_NAME}
+  - AIRFLOW_VAR_MODEL_STAGE=${MODEL_STAGE}
 
 x-airflow-image: &airflow_image apache/airflow:2.0.0-python3.6
 # ====================================== /AIRFLOW ENVIRONMENT VARIABLES ======================================

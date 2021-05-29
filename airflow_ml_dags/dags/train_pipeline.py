@@ -11,6 +11,8 @@ from constants import (
     DEFAULT_ARGS,
     MLFLOW_TRACKING_URI,
     MODEL_DIR,
+    MODEL_NAME,
+    MODEL_STAGE,
     NETWORK,
     PROCESSED_DATA_DIR,
     RAW_DATA_DIR,
@@ -33,6 +35,8 @@ def generate_operator(task_id, command):
         entrypoint="python main.py",
         environment={
             "MLFLOW_TRACKING_URI": MLFLOW_TRACKING_URI,
+            "MODEL_NAME": MODEL_NAME,
+            "MODEL_STAGE": MODEL_STAGE,
         },
     )
 
