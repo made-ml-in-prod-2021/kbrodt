@@ -4,6 +4,7 @@ from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
 from airflow.sensors.filesystem import FileSensor
 from constants import (
+    ARTIFACT_VOLUME,
     CONFIG_PATH,
     CONFIGS_VOLUME_DIR,
     DATA_VOLUME_DIR,
@@ -24,9 +25,15 @@ def generate_operator(task_id, command):
         network_mode=NETWORK,
         task_id=f"docker-airflow-train-pipeline-{task_id}",
         do_xcom_push=False,
-        volumes=[f"{DATA_VOLUME_DIR}:/data", f"{CONFIGS_VOLUME_DIR}:/configs:ro"],
+        volumes=[
+            f"{DATA_VOLUME_DIR}:/data",
+            ARTIFACT_VOLUME,
+            f"{CONFIGS_VOLUME_DIR}:/configs:ro",
+        ],
         entrypoint="python main.py",
-        environment={"MLFLOW_TRACKING_URI": MLFLOW_TRACKING_URI},
+        environment={
+            "MLFLOW_TRACKING_URI": MLFLOW_TRACKING_URI,
+        },
     )
 
     return operator

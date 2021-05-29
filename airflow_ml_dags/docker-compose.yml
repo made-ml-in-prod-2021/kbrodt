@@ -1,5 +1,3 @@
-# export DB_USER=user
-# export DB_PW=pass
 # export G_USER=user@gmail.com
 # export G_PW=pass
 
@@ -9,7 +7,7 @@ x-environment: &airflow_environment
   - AIRFLOW__CORE__EXECUTOR=LocalExecutor
   - AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=False
   - AIRFLOW__CORE__LOAD_EXAMPLES=False
-  - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql://${DB_USER}:${DB_PW}@postgres:5432/airflow
+  - AIRFLOW__CORE__SQL_ALCHEMY_CONN=${SQL_ALCHEMY_CONN}
   - AIRFLOW__CORE__STORE_DAG_CODE=True
   - AIRFLOW__CORE__STORE_SERIALIZED_DAGS=True
   - AIRFLOW__SMTP__SMTP_HOST=smtp.gmail.com
@@ -17,11 +15,12 @@ x-environment: &airflow_environment
   - AIRFLOW__SMTP__SMTP_USER=${G_USER}
   - AIRFLOW__SMTP__SMTP_PASSWORD=${G_PW}
   - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
-  - AIRFLOW_VAR_DATA_PATH=/home/kbrodt/edu/made-ml-in-prod-2021/airflow_ml_dags/data        # to change
-  - AIRFLOW_VAR_CONFIGS_PATH=/home/kbrodt/edu/made-ml-in-prod-2021/airflow_ml_dags/configs  # to change
-  - AIRFLOW_VAR_MODEL_PATH=/data/models/2021-05-22/model.pkl                                # to change
-  - AIRFLOW_VAR_NETWORK=airflow-net                                                         # to change
-  - AIRFLOW_VAR_MLFLOW_TRACKING_URI=postgresql://${DB_USER}:${DB_PW}@postgres:5432/mlflow   # http://mlflow:5000  # to change
+  - AIRFLOW_VAR_DATA_PATH=${DATA_PATH}
+  - AIRFLOW_VAR_CONFIGS_PATH=${CONFIGS_PATH}
+  - AIRFLOW_VAR_MODEL_PATH=/data/models/2021-05-22/model.pkl  # to change
+  - AIRFLOW_VAR_NETWORK=${NETWORK_NAME}
+  - AIRFLOW_VAR_MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI}
+  - AIRFLOW_VAR_ARTIFACT_VOLUME=${ARTIFACT_VOLUME}:${ARTIFACT_PATH}
 
 x-airflow-image: &airflow_image apache/airflow:2.0.0-python3.6
 # ====================================== /AIRFLOW ENVIRONMENT VARIABLES ======================================
@@ -33,9 +32,9 @@ services:
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PW}
-      - POSTGRES_MULTIPLE_DATABASES=airflow,mlflow
+      - POSTGRES_MULTIPLE_DATABASES=${DB_AIRFLOW},${DB_MLFLOW}
     networks:
-      - airflow-net
+      - ${NETWORK_NAME}
     ports:
       - "5432:5432"
 
@@ -46,7 +45,7 @@ services:
         AIRFLOW_BASE_IMAGE: *airflow_image
     image: airflow-docker
     networks:
-      - airflow-net
+      - ${NETWORK_NAME}
     depends_on:
       - postgres
     environment: *airflow_environment
@@ -69,7 +68,7 @@ services:
     depends_on:
       - postgres
     networks:
-      - airflow-net
+      - ${NETWORK_NAME}
     ports:
       - "8080:8080"
     volumes:
@@ -84,14 +83,14 @@ services:
         AIRFLOW_BASE_IMAGE: *airflow_image
     image: airflow-docker
     networks:
-      - airflow-net
+      - ${NETWORK_NAME}
     restart: always
     depends_on:
       - postgres
     volumes:
       - logs:/opt/airflow/logs
-      - ./dags/:/opt/airflow/dags/
-      - ./data/:/data/  # to change
+      - ${DAGS_PATH}:/opt/airflow/dags/
+      - ${LOCAL_DATA_PATH}:/data/
       - /var/run/docker.sock:/var/run/docker.sock
     environment: *airflow_environment
     command: scheduler
@@ -116,30 +115,28 @@ services:
     image:
       airflow-mlflow
     networks:
-      - airflow-net
+      - ${NETWORK_NAME}
     restart: always
     depends_on:
       - postgres
     ports:
       - "5000:5000"
-    environment:
-      - BACKEND=postgresql://${DB_USER}:${DB_PW}@postgres:5432/mlflow
-      - ARTIFACTS=/mlruns
     volumes:
-      - mlrun_data:/mlruns
+      - ${ARTIFACT_VOLUME}:${ARTIFACT_PATH}
     command:
       - sh  # enable var  substitution
       - -c
       - mlflow server
           --host 0.0.0.0
           --port 5000
-          --backend-store-uri $${BACKEND}
-          --default-artifact-root $${ARTIFACTS}
+          --backend-store-uri ${MLFLOW_TRACKING_URI}
+          --default-artifact-root ${ARTIFACT_PATH}
 
 volumes:
   logs:
   mlrun_data:
+    name: ${ARTIFACT_VOLUME}
 
 networks:
   airflow-net:
-    name: airflow-net
+    name: ${NETWORK_NAME}

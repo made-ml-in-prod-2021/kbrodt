@@ -1,12 +1,11 @@
-import os
 import json
-import tempfile
+import os
 from pathlib import Path
 from urllib.parse import urlparse
 
 import mlflow.sklearn
 from clfit.apis import load_model, predict_model, serialize_model, train_model
-from clfit.config.config import build_config, ConfigSchema
+from clfit.config.config import ConfigSchema, build_config
 from clfit.data import read_data
 from clfit.features import build_transformer, extract_target, make_features
 from clfit.models import get_model
@@ -15,23 +14,22 @@ from sklearn.metrics import accuracy_score
 
 
 def train(config_path, input_data_dir, output_model_dir):
+    config = build_config(config_path)
+
     mlflow.set_tracking_uri(os.environ["MLFLOW_TRACKING_URI"])
-
-    exp_name = "airflow-model-training"
+    exp_name = Path(config.experiment_path).name
     mlflow.set_experiment(exp_name)
-    experiment = mlflow.get_experiment_by_name(exp_name)
 
+    experiment = mlflow.get_experiment_by_name(exp_name)
     with mlflow.start_run(experiment_id=experiment.experiment_id):
-        config = build_config(config_path)
         mlflow.log_param("model type", config.train_params.model_type)
         mlflow.log_params(config.train_params.params)
 
-        # Here we need to create in shared volume
-        fd, tmp_path = tempfile.mkstemp()
-        with open(fd, "w") as f:
+        config_name = "config.json"
+        with open(config_name, "w") as f:
             json.dump(ConfigSchema().dump(config), f)
 
-        mlflow.log_artifact(tmp_path)
+        mlflow.log_artifact(config_name)
 
         input_data_path = Path(input_data_dir)
         train_df = read_data(str(input_data_path / TRAIN_DATA_FNAME))
@@ -59,14 +57,15 @@ def train(config_path, input_data_dir, output_model_dir):
         output_model_path = str(output_model_path / config.output_model_fname)
         serialize_model(model, transformer, output_model_path)
 
-        # model = load_model(output_model_path)
+        model = load_model(output_model_path)
         tracking_uri = mlflow.get_tracking_uri()
         tracking_url_type_store = urlparse(tracking_uri).scheme
+        model_name = Path(config.output_model_fname).stem
         if tracking_url_type_store != "file":
             mlflow.sklearn.log_model(
                 model,
-                config.output_model_fname,
-                registered_model_name=config.output_model_fname,
+                model_name,
+                registered_model_name=model_name,
             )
         else:
-            mlflow.sklearn.log_model(model, config.output_model_fname)
+            mlflow.sklearn.log_model(model, model_name)

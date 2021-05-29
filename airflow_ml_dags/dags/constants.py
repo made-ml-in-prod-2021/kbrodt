@@ -16,6 +16,7 @@ MODEL_PATH = Variable.get("model_path")
 CONFIGS_VOLUME_DIR = Variable.get("configs_path")
 MLFLOW_TRACKING_URI = Variable.get("mlflow_tracking_uri")
 NETWORK = Variable.get("network")
+ARTIFACT_VOLUME = Variable.get("artifact_volume")
 
 RAW_DATA_DIR = "/data/raw/{{ ds }}"
 PROCESSED_DATA_DIR = "/data/processed/{{ ds }}"

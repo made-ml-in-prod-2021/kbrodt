@@ -9,7 +9,7 @@ data folders in envirenment variables in [`docker-compose.yml`](./docker-compose
 ## Run airflow
 
 ```bash
-DB_USER=user DB_PW=user G_USER=USER@gmail.com G_PW=PASSWORD docker-compose up -d --build
+G_USER=USER@gmail.com G_PW=PASSWORD docker-compose up -d --build
 docker-compose log -f
 ```
 
@@ -18,6 +18,8 @@ To stop
 ```bash
 docker-compose down
 docker system prune
+docker volume prune
+docker network prune
 ```
 
 ## Usefull links
@@ -77,7 +79,7 @@ https://github.com/made-ml-in-prod-2021/airflow-examples/blob/main/dags/11_docke
 
 - [ ] Протестируйте ваши даги (5 баллов)
       https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html
-- [ ] В docker compose так же настройте поднятие mlflow и запишите туда
+- [X] В docker compose так же настройте поднятие mlflow и запишите туда
       параметры обучения, метрики и артефакт(модель) (5 доп баллов)
 - [ ] вместо пути в airflow variables  используйте апи Mlflow Model Registry (5
       доп баллов)
