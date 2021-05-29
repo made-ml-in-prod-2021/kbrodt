@@ -1,28 +1,39 @@
+# export DB_USER=user
+# export DB_PW=pass
+# export G_USER=user@gmail.com
+# export G_PW=pass
+
 version: '3.7'
 # ====================================== AIRFLOW ENVIRONMENT VARIABLES =======================================
 x-environment: &airflow_environment
   - AIRFLOW__CORE__EXECUTOR=LocalExecutor
   - AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=False
   - AIRFLOW__CORE__LOAD_EXAMPLES=False
-  - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql://airflow:airflow@postgres:5432/airflow
+  - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql://${DB_USER}:${DB_PW}@postgres:5432/airflow
   - AIRFLOW__CORE__STORE_DAG_CODE=True
   - AIRFLOW__CORE__STORE_SERIALIZED_DAGS=True
+  - AIRFLOW__SMTP__SMTP_HOST=smtp.gmail.com
+  - AIRFLOW__SMTP__SMTP_PORT=587
+  - AIRFLOW__SMTP__SMTP_USER=${G_USER}
+  - AIRFLOW__SMTP__SMTP_PASSWORD=${G_PW}
   - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
   - AIRFLOW_VAR_DATA_PATH=/home/kbrodt/edu/made-ml-in-prod-2021/airflow_ml_dags/data        # to change
   - AIRFLOW_VAR_CONFIGS_PATH=/home/kbrodt/edu/made-ml-in-prod-2021/airflow_ml_dags/configs  # to change
   - AIRFLOW_VAR_MODEL_PATH=/data/models/2021-05-22/model.pkl                                # to change
   - AIRFLOW_VAR_NETWORK=airflow-net                                                         # to change
-  - AIRFLOW_VAR_MLFLOW_TRACKING_URI=http://mlflow:5000                                      # to change
+  - AIRFLOW_VAR_MLFLOW_TRACKING_URI=postgresql://${DB_USER}:${DB_PW}@postgres:5432/mlflow   # http://mlflow:5000  # to change
 
 x-airflow-image: &airflow_image apache/airflow:2.0.0-python3.6
 # ====================================== /AIRFLOW ENVIRONMENT VARIABLES ======================================
 services:
   postgres:
-    image: postgres:12-alpine
+    build:
+      context: images/airflow-postgres
+    image: ariflow-postgres
     environment:
-      - POSTGRES_USER=airflow
-      - POSTGRES_PASSWORD=airflow
-      - POSTGRES_DB=airflow
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PW}
+      - POSTGRES_MULTIPLE_DATABASES=airflow,mlflow
     networks:
       - airflow-net
     ports:
@@ -80,7 +91,6 @@ services:
     volumes:
       - logs:/opt/airflow/logs
       - ./dags/:/opt/airflow/dags/
-      - ./configs/airflow.cfg:/opt/airflow/airflow.cfg
       - ./data/:/data/  # to change
       - /var/run/docker.sock:/var/run/docker.sock
     environment: *airflow_environment
@@ -108,12 +118,27 @@ services:
     networks:
       - airflow-net
     restart: always
+    depends_on:
+      - postgres
     ports:
-        - "5000:5000"
-    command: 'mlflow server --backend-store-uri ./mlflow --host 0.0.0.0 --port 5000'
+      - "5000:5000"
+    environment:
+      - BACKEND=postgresql://${DB_USER}:${DB_PW}@postgres:5432/mlflow
+      - ARTIFACTS=/mlruns
+    volumes:
+      - mlrun_data:/mlruns
+    command:
+      - sh  # enable var  substitution
+      - -c
+      - mlflow server
+          --host 0.0.0.0
+          --port 5000
+          --backend-store-uri $${BACKEND}
+          --default-artifact-root $${ARTIFACTS}
 
 volumes:
   logs:
+  mlrun_data:
 
 networks:
   airflow-net:

@@ -9,7 +9,15 @@ data folders in envirenment variables in [`docker-compose.yml`](./docker-compose
 ## Run airflow
 
 ```bash
-docker-compose up -d --build
+DB_USER=user DB_PW=user G_USER=USER@gmail.com G_PW=PASSWORD docker-compose up -d --build
+docker-compose log -f
+```
+
+To stop
+
+```bash
+docker-compose down
+docker system prune
 ```
 
 ## Usefull links
@@ -19,6 +27,9 @@ docker-compose up -d --build
 * [docker network](https://docs.docker.com/network/)
 * [link multiple docker containers via network](https://tjtelan.com/blog/how-to-link-multiple-docker-compose-via-network/)
 * [set network in airflow docker operator](https://github.com/apache/airflow/issues/8418)
+* [multiple databases with postgress docker](https://github.com/mrts/docker-postgresql-multiple-databases)
+* [mlflow: no module `psycopg2`](https://github.com/3loc/charts/issues/2)
+* [mlflow docker-compose example](https://github.com/aganse/docker_mlflow_db/blob/master/docker-compose.yaml)
 
 ## Roadmap
 

@@ -62,7 +62,7 @@ def train(config_path, input_data_dir, output_model_dir):
         # model = load_model(output_model_path)
         tracking_uri = mlflow.get_tracking_uri()
         tracking_url_type_store = urlparse(tracking_uri).scheme
-        if False:
+        if tracking_url_type_store != "file":
             mlflow.sklearn.log_model(
                 model,
                 config.output_model_fname,
