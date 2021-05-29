@@ -45,3 +45,10 @@ jobs:
           black --check .
           isort -c .
           flake8 .
+
+      - name: Lint airflow_ml_dags
+        working-directory: ./airflow_ml_dags
+        run: |
+          black --check .
+          isort -c .
+          flake8 .
