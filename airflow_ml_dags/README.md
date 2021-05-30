@@ -20,6 +20,15 @@ docker-compose down
 yes | docker system prune && yes | docker volume prune && yes | docker network prune
 ```
 
+## Run tests
+
+First, start airflow and exec into airflow scheduler (with mounted volume with tests)
+
+```bash
+docker exec -it AIRFLOW_SCHEDULER_CONTAINER_ID bash
+pytest -v .
+```
+
 ## Usefull links
 
 * [setup airflow send email](https://stackoverflow.com/questions/51829200/how-to-set-up-airflow-send-email)

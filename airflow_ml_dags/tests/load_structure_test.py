@@ -10,7 +10,7 @@ def dag_bag():
 
 
 def assert_dag_dict_equal(source, dag):
-    assert dag.task_dict.keys() in source.items()
+    assert dag.task_dict.keys() == source.keys()
 
     for task_id, downstream_list in source.items():
         assert dag.has_task(task_id)
@@ -19,19 +19,19 @@ def assert_dag_dict_equal(source, dag):
 
 
 @pytest.mark.parametrize(
-    "dag_id",
+    "dag_id, num_tasks",
     [
-        pytest.param("data_download"),
-        pytest.param("train_pipeline"),
-        pytest.param("predict"),
-        pytest.param("predict_prod"),
+        pytest.param("data_download", 1),
+        pytest.param("train_pipeline", 6),
+        pytest.param("predict", 3),
+        pytest.param("predict_prod", 2),
     ],
 )
-def test_dag_loaded(dag_bag, dag_id):
+def test_dag_loaded(dag_bag, dag_id, num_tasks):
     dag = dag_bag.get_dag(dag_id=dag_id)
     assert dag_bag.import_errors == {}
     assert dag is not None
-    assert len(dag.tasks) == 1
+    assert len(dag.tasks) == num_tasks
 
 
 @pytest.mark.parametrize(
