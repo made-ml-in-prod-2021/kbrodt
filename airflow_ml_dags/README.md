@@ -75,11 +75,11 @@ https://github.com/made-ml-in-prod-2021/airflow-examples/blob/main/dags/11_docke
 в этом месте пробрасывается путь с хостовой машины, используйте здесь путь типа
 /tmp или считывайте из переменных окружения.
 
-- [ ] Протестируйте ваши даги (5 баллов)
+- [X] Протестируйте ваши даги (5 баллов)
       https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html
 - [X] В docker compose так же настройте поднятие mlflow и запишите туда
       параметры обучения, метрики и артефакт(модель) (5 доп баллов)
-- [ ] вместо пути в airflow variables  используйте апи Mlflow Model Registry (5
+- [X] вместо пути в airflow variables  используйте апи Mlflow Model Registry (5
       доп баллов)
   Даг для инференса подхватывает последнюю продакшен модель.
 - [X] Настройте alert в случае падения дага (3 доп. балла)

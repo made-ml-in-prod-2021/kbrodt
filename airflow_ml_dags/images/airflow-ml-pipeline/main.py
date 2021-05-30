@@ -78,7 +78,13 @@ def setup_split_parser(subparsers):
 
 
 def callback_train(arguments):
-    train(arguments.config, arguments.input_data, arguments.output_model)
+    train(
+        arguments.config,
+        arguments.input_data,
+        arguments.output_model,
+        arguments.model_name,
+        arguments.stage,
+    )
 
 
 def setup_train_parser(subparsers):
@@ -105,6 +111,19 @@ def setup_train_parser(subparsers):
         type=str,
         required=True,
         help="Path to folder where model will be saved",
+    )
+    parser.add_argument(
+        "--model-name",
+        type=str,
+        required=True,
+        help="Model name",
+    )
+    parser.add_argument(
+        "--stage",
+        type=str,
+        required=False,
+        default="Production",
+        help="Model stage",
     )
 
     parser.set_defaults(callback=callback_train)

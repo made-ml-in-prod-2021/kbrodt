@@ -1,5 +1,4 @@
 import argparse
-import os
 from pathlib import Path
 
 import mlflow.pyfunc
@@ -7,6 +6,7 @@ import mlflow.sklearn
 import pandas as pd
 from clfit.apis import load_model, predict_model
 from clfit.data import read_data
+from mlflow.tracking import MlflowClient
 
 
 def parse_args():
@@ -61,10 +61,18 @@ def main():
     if arguments.model_path is not None:
         model = load_model(arguments.model_path)
     else:
-        mlflow.set_tracking_uri(os.environ["MLFLOW_TRACKING_URI"])
-        model = mlflow.pyfunc.load_model(
-            model_uri=f"models:/{arguments.model_name}/{arguments.model_stage}"
-        )
+        model_uri = f"models:/{arguments.model_name}/{arguments.model_stage}"
+
+        client = MlflowClient()
+        for mv in reversed(
+            client.search_model_versions(f"name='{arguments.model_name}'")
+        ):
+            mv_dict = dict(mv)
+            if mv_dict["current_stage"] == arguments.model_stage:
+                model_uri = mv_dict["source"]
+                break
+
+        model = mlflow.pyfunc.load_model(model_uri=model_uri)
 
     data = read_data(arguments.input_data)
 

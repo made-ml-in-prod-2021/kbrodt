@@ -64,15 +64,14 @@ def test_dag_loaded(dag_bag, dag_id):
             {
                 "wait-for-data": ["docker-airflow-predict"],
                 "wait-for-model": ["docker-airflow-predict"],
-                "docker-airflow-oredict": [],
+                "docker-airflow-predict": [],
             },
             "predict",
         ),
         pytest.param(
             {
-                "wait-for-data": ["docker-airflow-predict"],
-                "wait-for-model": ["docker-airflow-predict"],
-                "docker-airflow-oredict": [],
+                "wait-for-data": ["docker-airflow-predict-prod"],
+                "docker-airflow-predict-prod": [],
             },
             "predict_prod",
         ),

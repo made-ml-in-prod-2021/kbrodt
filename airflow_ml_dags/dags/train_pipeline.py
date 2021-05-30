@@ -35,8 +35,6 @@ def generate_operator(task_id, command):
         entrypoint="python main.py",
         environment={
             "MLFLOW_TRACKING_URI": MLFLOW_TRACKING_URI,
-            "MODEL_NAME": MODEL_NAME,
-            "MODEL_STAGE": MODEL_STAGE,
         },
     )
 
@@ -81,7 +79,9 @@ with DAG(
         "train",
         f"--config {CONFIG_PATH}"
         f" --input-data {PROCESSED_DATA_DIR}"
-        f" --output-model {MODEL_DIR}",
+        f" --output-model {MODEL_DIR}"
+        f" --model-name {MODEL_NAME}"
+        f" --stage {MODEL_STAGE}",
     )
 
     validate = generate_operator(
