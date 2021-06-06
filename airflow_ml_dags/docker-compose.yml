@@ -1,0 +1,144 @@
+# export G_USER=user@gmail.com
+# export G_PW=pass
+
+version: '3.7'
+# ====================================== AIRFLOW ENVIRONMENT VARIABLES =======================================
+x-environment: &airflow_environment
+  - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+  - AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=False
+  - AIRFLOW__CORE__LOAD_EXAMPLES=False
+  - AIRFLOW__CORE__SQL_ALCHEMY_CONN=${SQL_ALCHEMY_CONN}
+  - AIRFLOW__CORE__STORE_DAG_CODE=True
+  - AIRFLOW__CORE__STORE_SERIALIZED_DAGS=True
+  - AIRFLOW__SMTP__SMTP_HOST=smtp.gmail.com
+  - AIRFLOW__SMTP__SMTP_PORT=587
+  - AIRFLOW__SMTP__SMTP_USER=${G_USER}
+  - AIRFLOW__SMTP__SMTP_PASSWORD=${G_PW}
+  - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
+  - AIRFLOW_VAR_DATA_PATH=${DATA_PATH}
+  - AIRFLOW_VAR_CONFIGS_PATH=${CONFIGS_PATH}
+  - AIRFLOW_VAR_NETWORK=${NETWORK_NAME}
+  - AIRFLOW_VAR_MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI}
+  - AIRFLOW_VAR_ARTIFACT_VOLUME=${ARTIFACT_VOLUME}:${ARTIFACT_PATH}
+  - AIRFLOW_VAR_MODEL_PATH=${MODEL_PATH}
+  - AIRFLOW_VAR_MODEL_NAME=${MODEL_NAME}
+  - AIRFLOW_VAR_MODEL_STAGE=${MODEL_STAGE}
+
+x-airflow-image: &airflow_image apache/airflow:2.0.0-python3.6
+# ====================================== /AIRFLOW ENVIRONMENT VARIABLES ======================================
+services:
+  postgres:
+    build:
+      context: images/airflow-postgres
+    image: ariflow-postgres
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PW}
+      - POSTGRES_MULTIPLE_DATABASES=${DB_AIRFLOW},${DB_MLFLOW}
+    networks:
+      - ${NETWORK_NAME}
+    ports:
+      - "5432:5432"
+
+  init:
+    build:
+      context: images/airflow-docker
+      args:
+        AIRFLOW_BASE_IMAGE: *airflow_image
+    image: airflow-docker
+    networks:
+      - ${NETWORK_NAME}
+    depends_on:
+      - postgres
+    environment: *airflow_environment
+    entrypoint: /bin/bash
+    command: >-
+      -c 'airflow db init
+      && airflow users create
+      --username admin --password admin
+      --firstname Anonymous --lastname Admin
+      --role Admin --email admin@example.org
+      && airflow connections add fs_default --conn-type fs'
+
+  webserver:
+    build:
+      context: images/airflow-docker
+      args:
+        AIRFLOW_BASE_IMAGE: *airflow_image
+    image: airflow-docker
+    restart: always
+    depends_on:
+      - postgres
+    networks:
+      - ${NETWORK_NAME}
+    ports:
+      - "8080:8080"
+    volumes:
+      - logs:/opt/airflow/logs
+    environment: *airflow_environment
+    command: webserver
+
+  scheduler:
+    build:
+      context: images/airflow-docker
+      args:
+        AIRFLOW_BASE_IMAGE: *airflow_image
+    image: airflow-docker
+    networks:
+      - ${NETWORK_NAME}
+    restart: always
+    depends_on:
+      - postgres
+    volumes:
+      - logs:/opt/airflow/logs
+      - ${DAGS_PATH}:/opt/airflow/dags/
+      - ${LOCAL_DATA_PATH}:/data/
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment: *airflow_environment
+    command: scheduler
+
+  data_download:
+    build:
+      context: images/airflow-data-download
+    image:
+      airflow-data-download
+    restart: "no"
+
+  ml_pipeline:
+    build:
+      context: images/airflow-ml-pipeline
+    image:
+      airflow-ml-pipeline
+    restart: "no"
+
+  mlflow:
+    build:
+      context: images/airflow-mlflow
+    image:
+      airflow-mlflow
+    networks:
+      - ${NETWORK_NAME}
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "5000:5000"
+    volumes:
+      - ${ARTIFACT_VOLUME}:${ARTIFACT_PATH}
+    command:
+      - sh  # enable var  substitution
+      - -c
+      - mlflow server
+          --host 0.0.0.0
+          --port 5000
+          --backend-store-uri ${MLFLOW_TRACKING_URI}
+          --default-artifact-root ${ARTIFACT_PATH}
+
+volumes:
+  logs:
+  mlrun_data:
+    name: ${ARTIFACT_VOLUME}
+
+networks:
+  airflow-net:
+    name: ${NETWORK_NAME}

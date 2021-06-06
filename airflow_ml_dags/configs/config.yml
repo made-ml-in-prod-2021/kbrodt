@@ -1,0 +1,41 @@
+input_data_path: "/data/processed/train_data.csv"
+logging_path: "/configs/logging.conf.yml"
+experiment_path: "/data/models/logreg"
+output_model_fname: "model.pkl"
+metric_fname: "metrics.json"
+test_data_path: "/data/processed/dev_data.csv"
+predict_path: "/data/models/logreg/predicts.csv"
+
+splitting_params:
+  test_size: 0.1
+  seed: 314159
+
+train_params:
+  model_type: "LogisticRegression"
+  params:
+    random_state: 42
+
+feature_params:
+  feature_pipelines:
+    - name: "numeric"
+      pipelines:
+        - name: "SimpleImputer"
+          params:
+            strategy: "mean"
+        - name: "StandardScaler"
+      columns:
+        - "alcohol"
+        - "malic_acid"
+        - "ash"
+        - "alcalinity_of_ash"
+        - "magnesium"
+        - "total_phenols"
+        - "flavanoids"
+        - "nonflavanoid_phenols"
+        - "proanthocyanins"
+        - "color_intensity"
+        - "hue"
+        - "od280/od315_of_diluted_wines"
+        - "proline"
+
+  target_col: "target"
