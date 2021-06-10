@@ -45,9 +45,9 @@ minikube delete --all
       online-inference-pod.yaml
       (https://kubernetes.io/docs/concepts/workloads/pods/)
       
-      Задеплойте приложение в кластер (kubectl apply -f
-      online-inference-pod.yaml), убедитесь, что все поднялось (kubectl get
-      pods) Приложите скриншот, где видно, что все поднялось (4 балла)
+  Задеплойте приложение в кластер (kubectl apply -f online-inference-pod.yaml),
+  убедитесь, что все поднялось (kubectl get pods) Приложите скриншот, где
+  видно, что все поднялось (4 балла)
 
 - [ ] Пропишите requests/limits и напишите зачем это нужно в описание PR
       закоммитьте файл online-inference-pod-resources.yaml (2 балл)
