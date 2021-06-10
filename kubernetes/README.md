@@ -1,26 +1,53 @@
 # Homework 4: kubernetes
 
+## Prerequisites
+
+Install [kubectl](https://kubernetes.io/docs/tasks/tools/)
+
+```bash
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+install kubectl ~/.local/bin/kubectl
+```
+
+and [minikube](https://minikube.sigs.k8s.io/docs/start/)
+
+```bash
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+install minikube-linux-amd64 ~/.local/bin/minikube
+```
+
+Run cluster via `minikube start` and check `kubectl cluster-info`.
+
+To delete all of the minikube clusters:
+
+```bash
+minikube delete --all
+```
+
 ## Roadmap
 
-- [ ] Установите kubectl
-- [ ] Разверните kubernetes
+- [X] Установите kubectl
+- [X] Разверните kubernetes
+  
   Вы можете развернуть его в облаке:
   - https://cloud.google.com/kubernetes-engine
   - https://mcs.mail.ru/containers/
-  - https://cloud.yandex.ru/services/managed-kubernetes Либо воспользоваться
-    локальной инсталляцией
+  - https://cloud.yandex.ru/services/managed-kubernetes
+  
+  Либо воспользоваться локальной инсталляцией
   - https://kind.sigs.k8s.io/docs/user/quick-start/
   - https://minikube.sigs.k8s.io/docs/start/
 
-  Напишите, какой способ вы избрали. 
-  Убедитесь, с кластер поднялся (kubectl cluster-info) (5 баллов)
+  Напишите, какой способ вы избрали. Убедитесь, с кластер поднялся (kubectl
+  cluster-info) (5 баллов)
 
 - [ ] Напишите простой pod manifests для вашего приложения, назовите его
       online-inference-pod.yaml
-      (https://kubernetes.io/docs/concepts/workloads/pods/) Задеплойте
-      приложение в кластер (kubectl apply -f online-inference-pod.yaml),
-      убедитесь, что все поднялось (kubectl get pods) Приложите скриншот, где
-      видно, что все поднялось (4 балла)
+      (https://kubernetes.io/docs/concepts/workloads/pods/)
+      
+      Задеплойте приложение в кластер (kubectl apply -f
+      online-inference-pod.yaml), убедитесь, что все поднялось (kubectl get
+      pods) Приложите скриншот, где видно, что все поднялось (4 балла)
 
 - [ ] Пропишите requests/limits и напишите зачем это нужно в описание PR
       закоммитьте файл online-inference-pod-resources.yaml (2 балл)
@@ -44,6 +71,7 @@
 
 - [ ] Опишите деплоймент для вашего приложения.
       (https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+  
   Играя с параметрами деплоя(maxSurge, maxUnavaliable), добейтесь ситуации,
   когда при деплое новой версии 
   - Есть момент времени, когда на кластере есть как все старые поды, так и все
