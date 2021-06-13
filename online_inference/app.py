@@ -1,5 +1,7 @@
 import logging
 import os
+import time
+from datetime import datetime
 from typing import List, Optional, Union
 
 import pandas as pd
@@ -13,9 +15,13 @@ from sklearn.pipeline import Pipeline
 
 from config import ENTRY_POINT_MSG, ID_COL, STATUS_CODE, HeartDisease, Patient
 
+TIME_TO_SLEEP = 20
+TIME_TO_FAIL = 90
+
 logger = logging.getLogger(__name__)
 model: Optional[Pipeline] = None
 app = FastAPI()
+start_time = datetime.now()
 
 
 def make_predict(
@@ -49,6 +55,8 @@ def main():
 def prepare_model():
     global model
 
+    time.sleep(TIME_TO_SLEEP)
+
     model_path = os.getenv("PATH_TO_MODEL")
     logger.info("load model from %s", model_path)
 
@@ -63,6 +71,14 @@ def prepare_model():
 
 @app.get("/health")
 def health() -> bool:
+    global model
+    global start_time
+
+    now = datetime.now()
+    elapsed_time = now - start_time
+    if elapsed_time.seconds > TIME_TO_FAIL:
+        return False
+
     return not (model is None)
 
 
