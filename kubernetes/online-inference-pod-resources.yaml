@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: online-inference-resources
+  labels:
+    app: online-inference-resources
+spec:
+  containers:
+    - image: kbrodt/online_inference:v1
+      name: online-inference
+      ports:
+        - containerPort: 8000
+      resources:
+        requests:
+          memory: 64Mi
+          cpu: 200m
+        limits:
+          memory: 128Mi
+          cpu: 250m
