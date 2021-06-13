@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: online-inference
+  labels:
+    app: online-inference
+spec:
+  containers:
+    - image: kbrodt/online_inference:v1
+      name: online-inference
+      ports:
+        - containerPort: 8000

@@ -24,6 +24,25 @@ To delete all of the minikube clusters:
 minikube delete --all
 ```
 
+## Commands
+
+### Pod: online-inference
+
+Run following commands to create `online-inference` pod
+
+```bash
+kubectl apply -f ./online-inference-pod.yaml
+kubectl get pods
+```
+
+To connect
+
+```bash
+kubectl port-forward pods/online-inference 8000:8000
+```
+
+and `online-inference` will be avalable at [localhost](http://localhost:8000).
+
 ## Roadmap
 
 - [X] Установите kubectl
@@ -41,7 +60,7 @@ minikube delete --all
   Напишите, какой способ вы избрали. Убедитесь, с кластер поднялся (kubectl
   cluster-info) (5 баллов)
 
-- [ ] Напишите простой pod manifests для вашего приложения, назовите его
+- [X] Напишите простой pod manifests для вашего приложения, назовите его
       online-inference-pod.yaml
       (https://kubernetes.io/docs/concepts/workloads/pods/)
       
