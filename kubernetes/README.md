@@ -43,6 +43,12 @@ kubectl port-forward pods/online-inference 8000:8000
 
 and `online-inference` will be avalable at [localhost](http://localhost:8000).
 
+To delete specific pod run
+
+```bash
+kubectl delete pods/online-inference
+```
+
 ## Roadmap
 
 - [X] Установите kubectl
