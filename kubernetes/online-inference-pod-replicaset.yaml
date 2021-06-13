@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: online-inference-replica
+  labels:
+    app: online-inference-replica
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: online-inference-replica
+  template:
+    metadata:
+      name: online-inference-replica
+      labels:
+        app: online-inference-replica
+    spec:
+      containers:
+        - image: kbrodt/online_inference:v1
+          name: online-inference
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 200m
+            limits:
+              memory: 128Mi
+              cpu: 250m
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
