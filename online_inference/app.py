@@ -77,7 +77,7 @@ def health() -> bool:
     now = datetime.now()
     elapsed_time = now - start_time
     if elapsed_time.seconds > TIME_TO_FAIL:
-        raise Exception('app is dead')
+        raise Exception("app is dead")
 
     return not (model is None)
 
