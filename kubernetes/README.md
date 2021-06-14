@@ -100,7 +100,7 @@ kubectl delete pods/online-inference
     создаваться с новыми версиями, а старые остануться прежними** (3 балла)
   Закоммитьте online-inference-replicaset.yaml
 
-- [ ] Опишите деплоймент для вашего приложения.
+- [X] Опишите деплоймент для вашего приложения.
       (https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
   
   Играя с параметрами деплоя(maxSurge, maxUnavaliable), добейтесь ситуации,
@@ -108,8 +108,10 @@ kubectl delete pods/online-inference
   - Есть момент времени, когда на кластере есть как все старые поды, так и все
     новые (опишите эту ситуацию) (закоммититьте файл
     online-inference-deployment-blue-green.yaml)
+    **`maxSurge=100%, maxUnavaliable=0%`**
   - одновременно с поднятием новых версии, гасятся старые (закоммитите файл
     online-inference-deployment-rolling-update.yaml) (3 балла)
+    **`maxSurge=50%, maxUnavaliable=50%`**
 
 Бонусные активности:
 - [ ] Установить helm и оформить helm chart, включить в состав чарта ConfigMap
