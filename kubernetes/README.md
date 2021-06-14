@@ -60,7 +60,21 @@ kubectl get -w replicasets.apps
 ### Get a shell
 
 ```bash
-kubectl exec --stdin --tty online-inferece -- /bin/bash
+kubectl exec --stdin --tty online-inference -- /bin/bash
+```
+
+## Helm
+
+```bash
+helm upgrade \
+    --install online-inference-service \
+    ./charts \
+    --set replicas=3 \
+    --set image.tag=v1
+
+helm history online-inference-service
+helm rollback online-inference-service 1
+helm uninstall online-inference-service
 ```
 
 ## Roadmap
@@ -130,5 +144,5 @@ kubectl exec --stdin --tty online-inferece -- /bin/bash
     `maxSurge=50%`**
 
 Бонусные активности:
-- [ ] Установить helm и оформить helm chart, включить в состав чарта ConfigMap
+- [X] Установить helm и оформить helm chart, включить в состав чарта ConfigMap
       и Service. -- 5 баллов

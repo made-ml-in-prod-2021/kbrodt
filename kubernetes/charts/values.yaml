@@ -1,0 +1,11 @@
+image:
+  tag: v1
+
+replicas: 3
+maxSurge: 2
+maxUnavailable: 2
+
+service:
+  type: LoadBalancer
+  port: 8000
+  targetPort: 8000
