@@ -49,6 +49,14 @@ To delete specific pod run
 kubectl delete pods/online-inference
 ```
 
+### Monitoring
+
+```bash
+kubectl get -w pods
+kubectl get -w deployments.apps
+kubectl get -w replicasets.apps
+```
+
 ## Roadmap
 
 - [X] Установите kubectl
