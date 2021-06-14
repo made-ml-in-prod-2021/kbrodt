@@ -57,6 +57,12 @@ kubectl get -w deployments.apps
 kubectl get -w replicasets.apps
 ```
 
+### Get a shell
+
+```bash
+kubectl exec --stdin --tty online-inferece -- /bin/bash
+```
+
 ## Roadmap
 
 - [X] Установите kubectl
