@@ -108,10 +108,12 @@ kubectl delete pods/online-inference
   - Есть момент времени, когда на кластере есть как все старые поды, так и все
     новые (опишите эту ситуацию) (закоммититьте файл
     online-inference-deployment-blue-green.yaml)
-    **`maxSurge=100%, maxUnavaliable=0%`**
+    **запрещаем удалять старые `maxUnavaliable=0%`, пока не создатутся все
+    новые `maxSurge=100%`**
   - одновременно с поднятием новых версии, гасятся старые (закоммитите файл
     online-inference-deployment-rolling-update.yaml) (3 балла)
-    **`maxSurge=50%, maxUnavaliable=50%`**
+    **создаём один новый, потом убиваем один старый: `maxUnavaliable=50%` и
+    `maxSurge=50%`**
 
 Бонусные активности:
 - [ ] Установить helm и оформить helm chart, включить в состав чарта ConfigMap
