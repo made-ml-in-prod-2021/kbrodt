@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: online-inference-service
+  labels:
+    app: online-inference-service
+spec:
+  replicas: {{ .Values.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: {{ .Values.maxSurge }}
+      maxSurge: {{ .Values.maxUnavailable }}
+  selector:
+    matchLabels:
+      app: online-inference-service
+  template:
+    metadata:
+      name: online-inference-service
+      labels:
+        app: online-inference-service
+    spec:
+      containers:
+        - image: kbrodt/online_inference:{{ .Values.image.tag }}
+          name: online-inference-service
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          volumeMounts:
+            - name: config
+              mountPath: "/etc/config"
+              readOnly: true
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 200m
+            limits:
+              memory: 128Mi
+              cpu: 250m
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+      volumes:
+        - name: config
+          configMap:
+            name: config

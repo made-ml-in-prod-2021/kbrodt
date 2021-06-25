@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: online-inference-service
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: frontend
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+{{- if eq .Values.service.type "NodePort" }}
+      nodePort: {{ .Values.service.nodePort }}
+{{- end }}

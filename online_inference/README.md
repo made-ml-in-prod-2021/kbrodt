@@ -13,6 +13,7 @@ Build docker
 
 ```bash
 docker build -t kbrodt/online_inference:v1 .
+# docker push kbrodt/online_inference:v1
 ```
 
 or pull

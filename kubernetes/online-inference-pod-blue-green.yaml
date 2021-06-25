@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: online-inference-blue-green
+  labels:
+    app: online-inference-blue-green
+spec:
+  replicas: 3
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0%
+      maxSurge: 100%
+  selector:
+    matchLabels:
+      app: online-inference-blue-green
+  template:
+    metadata:
+      name: online-inference-blue-green
+      labels:
+        app: online-inference-blue-green
+    spec:
+      containers:
+        - image: kbrodt/online_inference:v1
+          name: online-inference
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 200m
+            limits:
+              memory: 128Mi
+              cpu: 250m
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
